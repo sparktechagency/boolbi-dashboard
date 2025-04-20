@@ -35,7 +35,7 @@ const UserEngagement = () => {
   const chartData = dummyChartData;
 
   return (
-    <div className="bg-white p-5 w-[100%] h-[300px] rounded-2xl border">
+    <div className="bg-white p-5 w-[100%] h-[410px] rounded-2xl border">
       <div className="flex justify-between items-center mb-5">
         <h2 className="font-bold">User Engagement</h2>
         <div className="relative">
@@ -77,7 +77,7 @@ const UserEngagement = () => {
           <Line
             type="monotone"
             dataKey="orderCount"
-            stroke="#8b0000"
+            stroke="#4A4F61"
             activeDot={{ r: 8 }}
           />
           <Line type="monotone" dataKey="userCount" stroke="#5c2579cc" />

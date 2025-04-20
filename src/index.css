@@ -39,16 +39,16 @@
   color: #413f3f;
 }
 .ant-menu-item:hover {
-  background-color: White !important;
-  color: black !important;
+  background-color: #4a4f61 !important;
+  color: white !important;
 }
 
 .ant-menu-item-selected {
-  background-color: White !important;
-  color: black !important;
+  background-color: #4a4f61 !important;
+  color: white !important;
   /* margin: 0 !important;
   padding: 0 !important; */
-  border-radius: 0 !important;
+  border-radius: 20 !important;
   width: "100%" !important;
 }
 

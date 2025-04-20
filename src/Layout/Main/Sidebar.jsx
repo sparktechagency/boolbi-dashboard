@@ -1,25 +1,33 @@
 import { Menu } from "antd";
 import React, { useEffect, useState } from "react";
 import {
+  MdAdminPanelSettings,
   MdCancelPresentation,
   MdCategory,
   MdFeaturedPlayList,
   MdMiscellaneousServices,
+  MdOutlinePrivacyTip,
+  MdOutlineSupportAgent,
 } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import { TbUserScreen } from "react-icons/tb";
+import { TbExchange, TbUserScreen, TbWorld } from "react-icons/tb";
 import { IoIosLogOut } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 
 import { PiUserPlus } from "react-icons/pi";
 import { LuLayoutDashboard } from "react-icons/lu";
 import Cookies from "js-cookie";
-import logo from "../../assets/barberMeLogo.png";
+import logo from "../../assets/logo.png";
 import { DiGoogleAnalytics } from "react-icons/di";
 import { BiSolidCategoryAlt } from "react-icons/bi";
-import { FaMoneyBillTransfer, FaScissors } from "react-icons/fa6";
-import { FaBorderStyle } from "react-icons/fa";
+import {
+  FaClipboardList,
+  FaMoneyBillTransfer,
+  FaScissors,
+  FaUser,
+} from "react-icons/fa6";
+import { FaBorderStyle, FaShoppingBag } from "react-icons/fa";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -47,79 +55,31 @@ const Sidebar = () => {
         </Link>
       ),
     },
-    // {
-    //   key: "/transactions",
-    //   icon: <DiGoogleAnalytics size={24} />,
-    //   label: <Link to="/transactions">Transactions</Link>,
-    // },
     {
-      key: "/banners",
-      icon: <MdFeaturedPlayList size={24} />,
-      label: <Link to="/banners">Banners</Link>,
-    },
-    // {
-    //   key: "/category",
-    //   icon: <BiSolidCategoryAlt size={24} />,
-    //   label: <Link to="/category">Category</Link>,
-    // },
-    {
-      key: "/users",
+      key: "/customers",
       icon: <TbUserScreen size={24} />,
-      label: <Link to="/users">Users</Link>,
+      label: <Link to="/customers">Customers</Link>,
     },
     {
-      key: "/vendors",
+      key: "/service-provider",
       icon: <PiUserPlus size={24} />,
-      label: <Link to="/vendors">Barbers</Link>,
+      label: <Link to="/service-provider">Service Provider</Link>,
     },
+
     {
-      key: "subMenuSalon",
-      icon: <FaScissors size={24} />,
-      label: "Salon",
-      children: [
-        {
-          key: "/services",
-          icon: <MdMiscellaneousServices size={24} />,
-          label: (
-            <Link to="/services" className="text-white hover:text-white">
-              Services
-            </Link>
-          ),
-        },
-        {
-          key: "/salon-category",
-          icon: <BiSolidCategoryAlt size={24} />,
-          label: (
-            <Link to="/salon-category" className="text-white hover:text-white">
-              Category
-            </Link>
-          ),
-        },
-        {
-          key: "/sub-category",
-          icon: <MdCategory size={24} />,
-          label: (
-            <Link to="/sub-category" className="text-white hover:text-white">
-              Sub Category
-            </Link>
-          ),
-        },
-      ],
-    },
-    {
-      key: "/orders",
+      key: "/order-request",
       icon: <FaBorderStyle size={24} />,
-      label: <Link to="/orders">Orders</Link>,
+      label: <Link to="/order-request">Order Request</Link>,
     },
     {
-      key: "/cancellation",
-      icon: <MdCancelPresentation size={24} />,
-      label: <Link to="/cancellation">Cancellation</Link>,
-    },
-    {
-      key: "/our-transactions",
+      key: "/payment-history",
       icon: <FaMoneyBillTransfer size={24} />,
-      label: <Link to="/our-transactions">Transactions</Link>,
+      label: <Link to="/payment-history">Payment History</Link>,
+    },
+    {
+      key: "/job-category",
+      icon: <FaShoppingBag size={24} />,
+      label: <Link to="/job-category">Job Category</Link>,
     },
 
     {
@@ -129,6 +89,7 @@ const Sidebar = () => {
       children: [
         {
           key: "/personal-information",
+          icon: <FaUser size={18} />,
           label: (
             <Link
               to="/personal-information"
@@ -140,6 +101,7 @@ const Sidebar = () => {
         },
         {
           key: "/change-password",
+          icon: <TbExchange size={18} />,
           label: (
             <Link to="/change-password" className="text-white hover:text-white">
               Change Password
@@ -147,23 +109,26 @@ const Sidebar = () => {
           ),
         },
         {
-          key: "/offer-list",
+          key: "/language",
+          icon: <TbWorld size={18} />,
           label: (
-            <Link to="/offer-list" className="text-white hover:text-white">
-              Offer List
+            <Link to="/language" className="text-white hover:text-white">
+              Language
             </Link>
           ),
         },
         {
-          key: "/about-us",
+          key: "/privacy-policy",
+          icon: <MdOutlinePrivacyTip size={18} />,
           label: (
-            <Link to="/about-us" className="text-white hover:text-white">
-              About Us
+            <Link to="/privacy-policy" className="text-white hover:text-white">
+              Privacy Policy
             </Link>
           ),
         },
         {
           key: "/terms-and-condition",
+          icon: <FaClipboardList size={18} />,
           label: (
             <Link
               to="/terms-and-condition"
@@ -174,18 +139,20 @@ const Sidebar = () => {
           ),
         },
         {
-          key: "/privacy-policy",
+          key: "/support-request",
+          icon: <MdOutlineSupportAgent size={18} />,
           label: (
-            <Link to="/privacy-policy" className="text-white hover:text-white">
-              Privacy Policy
+            <Link to="/support-request" className="text-white hover:text-white">
+              Support Request
             </Link>
           ),
         },
         {
-          key: "/f-a-q",
+          key: "/make-admin",
+          icon: <MdAdminPanelSettings size={18} />,
           label: (
-            <Link to="/f-a-q" className="text-white hover:text-white">
-              FAQ
+            <Link to="/make-admin" className="text-white hover:text-white">
+              Make Admin
             </Link>
           ),
         },
@@ -229,9 +196,9 @@ const Sidebar = () => {
       <div className="px-10">
         <Link
           to={"/"}
-          className="mb-10 flex items-center flex-col gap-2 justify-center py-4"
+          className="mb-3 flex items-center flex-col gap-2 justify-center py-4"
         >
-          <img src={logo} alt="" />
+          <img src={logo} alt="" className="w-32 h-32" />
         </Link>
       </div>
       <Menu
