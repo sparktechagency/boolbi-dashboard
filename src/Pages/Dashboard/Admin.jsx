@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import CreateAdmin from "../../components/ui/Admin/CreateAdmin";
 import Title from "../../components/common/Title";
+import { FaTrash } from "react-icons/fa6";
 
 const data = [
   {
@@ -57,12 +58,12 @@ const Admin = () => {
       dataIndex: "action",
       key: "action",
       render: (_, record) => (
-        <RiDeleteBin5Line size={24} className="text-red-600" />
+        <FaTrash size={18} className="text-red-500 cursor-pointer" />
       ),
     },
   ];
   return (
-    <div>
+    <div className="bg-white p-10 h-screen">
       {/* header */}
       <div className="flex items-center justify-between mb-4">
         <Title className="">Admins</Title>

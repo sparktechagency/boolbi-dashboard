@@ -9,6 +9,7 @@ import "./index.css";
 import { Provider } from "react-redux";
 import store from "./redux/store.js";
 import { Toaster } from "react-hot-toast";
+import { ConfigProvider } from "antd";
 
 i18next.init({
   interpolation: {
@@ -31,7 +32,15 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <I18nextProvider i18n={i18next}>
       <Provider store={store}>
-        <App />
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: "#63666A",
+            },
+          }}
+        >
+          <App />
+        </ConfigProvider>
         <Toaster />
       </Provider>
     </I18nextProvider>

@@ -156,10 +156,10 @@ const PersonalInfo = () => {
                   width: 178,
                   height: 48,
                   fontWeight: "400px",
-                  background: "#8b0000",
+                  background: "#63666A",
                   color: "white",
                 }}
-                className="roboto-medium mt-10 text-sm leading-4"
+                className="roboto-medium mt-10 text-sm leading-4 hover:bg-primary/80"
               >
                 Save and Change
               </Button>

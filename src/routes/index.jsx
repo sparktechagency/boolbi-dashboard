@@ -23,6 +23,9 @@ import Orders from "../Pages/Dashboard/Orders";
 import Vendor from "../Pages/Dashboard/Vendor";
 import JobCategory from "../Pages/Dashboard/JobCategory";
 import Language from "../Pages/Dashboard/Language";
+import Category from "../Pages/Dashboard/Category";
+import SubCategory from "../Pages/Dashboard/SubCategory";
+import SupportRequest from "../Pages/Dashboard/SupportRequest";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +60,14 @@ const router = createBrowserRouter([
         element: <Vendors />,
       },
       {
+        path: "/category",
+        element: <Category />,
+      },
+      {
+        path: "/sub-category",
+        element: <SubCategory />,
+      },
+      {
         path: "/job-category",
         element: <JobCategory />,
       },
@@ -78,12 +89,7 @@ const router = createBrowserRouter([
       },
       {
         path: "support-request",
-        element: <AboutUs />,
-      },
-
-      {
-        path: "order-request",
-        element: <Orders />,
+        element: <SupportRequest />,
       },
       {
         path: "/make-admin",

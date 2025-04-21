@@ -1,9 +1,5 @@
 import React from "react";
-import { ConfigProvider, Input, Tabs } from "antd";
-import { Link, useParams } from "react-router-dom";
-import { BiLeftArrowAlt } from "react-icons/bi";
-import RunningOrderTable from "../../components/ui/Analytics/RunningOrderTable";
-
+import { useParams } from "react-router-dom";
 const User = () => {
   const { id } = useParams();
 

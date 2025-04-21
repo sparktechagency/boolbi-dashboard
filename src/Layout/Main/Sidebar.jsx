@@ -65,22 +65,43 @@ const Sidebar = () => {
       icon: <PiUserPlus size={24} />,
       label: <Link to="/service-provider">Service Provider</Link>,
     },
-
-    {
-      key: "/order-request",
-      icon: <FaBorderStyle size={24} />,
-      label: <Link to="/order-request">Order Request</Link>,
-    },
     {
       key: "/payment-history",
       icon: <FaMoneyBillTransfer size={24} />,
       label: <Link to="/payment-history">Payment History</Link>,
     },
+
     {
-      key: "/job-category",
-      icon: <FaShoppingBag size={24} />,
-      label: <Link to="/job-category">Job Category</Link>,
+      key: "subMenuSetting",
+      icon: <IoSettingsOutline size={24} />,
+      label: "Manage Categories",
+      children: [
+        {
+          key: "/category",
+          icon: <FaUser size={18} />,
+          label: (
+            <Link to="/category" className="text-white hover:text-white">
+              Category
+            </Link>
+          ),
+        },
+        {
+          key: "/sub-category",
+          icon: <FaUser size={18} />,
+          label: (
+            <Link to="/sub-category" className="text-white hover:text-white">
+              Sub Category
+            </Link>
+          ),
+        },
+      ],
     },
+
+    // {
+    //   key: "/job-category",
+    //   icon: <FaShoppingBag size={24} />,
+    //   label: <Link to="/job-category">Job Category</Link>,
+    // },
 
     {
       key: "subMenuSetting",
