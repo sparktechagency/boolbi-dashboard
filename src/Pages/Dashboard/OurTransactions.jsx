@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Table, Switch, Input, Space } from "antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { FaEye } from "react-icons/fa6";
+import { render } from "react-dom";
 
 const OurTransactions = () => {
   const [commission, setCommission] = useState(5);
@@ -10,14 +11,14 @@ const OurTransactions = () => {
     {
       serialNo: "01",
       jobName: "Create iOS App",
-      budget: "$310",
+      budget: "310",
       companyName: "Withdrawal Limited Company",
       payment: "Pending",
     },
     {
       serialNo: "01",
       jobName: "Create iOS App",
-      budget: "$310",
+      budget: "310",
       companyName: "Withdrawal Limited Company",
       payment: "Paid",
     },
@@ -39,11 +40,22 @@ const OurTransactions = () => {
       title: "Budget",
       dataIndex: "budget",
       key: "budget",
+      render: (budget) => {
+        return <p>${budget}</p>;
+      },
     },
     {
       title: "Company/Customer Name",
       dataIndex: "companyName",
       key: "companyName",
+    },
+    {
+      title: "Profit",
+      dataIndex: "profit",
+      key: "profit",
+      render: (_, record) => {
+        return <p>${(record.budget * 5) / 100}</p>;
+      },
     },
     {
       title: "Payment",

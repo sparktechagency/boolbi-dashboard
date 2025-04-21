@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Table, Button, Space } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
+import { Table, Button, Space, Modal } from "antd";
+import { FaEye } from "react-icons/fa6";
 
 const Users = () => {
   const [pageSize, setPageSize] = useState(10);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const data = [
     {
@@ -11,21 +13,40 @@ const Users = () => {
       customerName: "Md Kamran Khan",
       category: "UX/UI Designer",
       status: "Active",
+      email: "Kamran.Uliya@Gmail.Com",
+      phone: "01333327633",
+      country: "Germany",
+      location: "Berlin Germany",
+      profileImg: "https://i.ibb.co.com/Z6nyF6q/mukesh-Ambani.jpg",
     },
     {
       serialNo: "02",
-      customerName: "Md Kamran Khan",
-      category: "UX/UI Designer",
-      status: "Block",
+      customerName: "Mithila Khan",
+      category: "Frontend Developer",
+      status: "Active",
+      email: "mithuu@gmail.com",
+      phone: "01111111111",
+      country: "Bangladesh",
+      location: "Chittagong Road, Narayanganj",
+      profileImg: "https://i.ibb.co.com/GfNydhRW/random-Profile-Image.jpg",
     },
     {
       serialNo: "03",
-      customerName: "Md Kamran Khan",
-      category: "UX/UI Designer",
+      customerName: "Alex Chen",
+      category: "Full Stack Developer",
       status: "Report",
+      email: "alex.chen@gmail.com",
+      phone: "01555549855",
+      country: "Canada",
+      location: "Toronto, Canada",
+      profileImg: "https://i.ibb.co.com/Z6nyF6q/mukesh-Ambani.jpg",
     },
-    // ... add more data as needed
   ];
+
+  const showUserDetails = (record) => {
+    setSelectedUser(record);
+    setIsModalOpen(true);
+  };
 
   const columns = [
     {
@@ -72,11 +93,11 @@ const Users = () => {
     {
       title: "Action",
       key: "action",
-      render: () => (
-        <Button
-          type="text"
-          icon={<EyeOutlined />}
-          className="text-gray-600 hover:text-gray-800"
+      render: (_, record) => (
+        <FaEye
+          size={18}
+          className="text-blue-500 cursor-pointer"
+          onClick={() => showUserDetails(record)}
         />
       ),
     },
@@ -94,6 +115,50 @@ const Users = () => {
         pagination={{ pageSize }}
         className="custom-table"
       />
+
+      <Modal
+        title={null}
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+        width={400}
+      >
+        {selectedUser && (
+          <div className="text-center">
+            <div className="mb-6">
+              <img
+                src={selectedUser.profileImg || "https://placeholder.com/150"}
+                alt={selectedUser.customerName}
+                className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+              />
+              <p className="text-lg font-medium">{selectedUser.category}</p>
+            </div>
+
+            <div className="space-y-4 text-left">
+              <div>
+                <p className="text-gray-600 mb-1">Name:</p>
+                <p className="font-medium">{selectedUser.customerName}</p>
+              </div>
+              <div>
+                <p className="text-gray-600 mb-1">Email:</p>
+                <p className="font-medium">{selectedUser.email}</p>
+              </div>
+              <div>
+                <p className="text-gray-600 mb-1">Phone:</p>
+                <p className="font-medium">{selectedUser.phone}</p>
+              </div>
+              <div>
+                <p className="text-gray-600 mb-1">Country:</p>
+                <p className="font-medium">{selectedUser.country}</p>
+              </div>
+              <div>
+                <p className="text-gray-600 mb-1">Location:</p>
+                <p className="font-medium">{selectedUser.location}</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };

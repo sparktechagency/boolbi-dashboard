@@ -28,6 +28,7 @@ import {
   FaUser,
 } from "react-icons/fa6";
 import { FaBorderStyle, FaShoppingBag } from "react-icons/fa";
+import { ChartBarStacked, ChartColumnStacked } from "lucide-react";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -72,13 +73,13 @@ const Sidebar = () => {
     },
 
     {
-      key: "subMenuSetting",
+      key: "subMenuCategory",
       icon: <IoSettingsOutline size={24} />,
       label: "Manage Categories",
       children: [
         {
           key: "/category",
-          icon: <FaUser size={18} />,
+          icon: <ChartBarStacked size={18} />,
           label: (
             <Link to="/category" className="text-white hover:text-white">
               Category
@@ -87,7 +88,7 @@ const Sidebar = () => {
         },
         {
           key: "/sub-category",
-          icon: <FaUser size={18} />,
+          icon: <ChartColumnStacked size={18} />,
           label: (
             <Link to="/sub-category" className="text-white hover:text-white">
               Sub Category

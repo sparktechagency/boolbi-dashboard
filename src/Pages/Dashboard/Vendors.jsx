@@ -1,29 +1,52 @@
-import React from "react";
-import { Table, Button } from "antd";
+import React, { useState } from "react";
+import { Table, Button, Modal } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 
 const Vendors = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState(null);
+
   const data = [
     {
       serialNo: "01",
       serviceProvider: "Md Kamran Khan",
       category: "UX/UI Designer",
       status: "Active",
+      email: "Kamran.Uliya@Gmail.Com",
+      phone: "01333327633",
+      country: "Germany",
+      location: "Berlin Germany",
+      profileImg: "https://i.ibb.co.com/Z6nyF6q/mukesh-Ambani.jpg",
     },
     {
       serialNo: "02",
-      serviceProvider: "Md Kamran Khan",
-      category: "UX/UI Designer",
+      serviceProvider: "Sam Johnson",
+      category: "Frontend Developer",
       status: "Block",
+      email: "sam.j@gmail.com",
+      phone: "01444438744",
+      country: "United States",
+      location: "New York City",
+      profileImg: "https://i.ibb.co.com/Z6nyF6q/mukesh-Ambani.jpg",
     },
     {
       serialNo: "03",
-      serviceProvider: "Md Kamran Khan",
-      category: "UX/UI Designer",
+      serviceProvider: "Ahmed Hassan",
+      category: "Backend Developer",
       status: "Report",
+      email: "ahmed.h@gmail.com",
+      phone: "01555549855",
+      country: "UAE",
+      location: "Dubai",
+      profileImg: "https://i.ibb.co.com/Z6nyF6q/mukesh-Ambani.jpg",
     },
     // Add more data as needed
   ];
+
+  const showProviderDetails = (record) => {
+    setSelectedProvider(record);
+    setIsModalOpen(true);
+  };
 
   const columns = [
     {
@@ -70,8 +93,13 @@ const Vendors = () => {
     {
       title: "Action",
       key: "action",
-      render: () => (
-        <Button type="text" icon={<EyeOutlined />} className="text-[#63666A]" />
+      render: (_, record) => (
+        <Button
+          type="text"
+          icon={<EyeOutlined />}
+          className="text-[#63666A]"
+          onClick={() => showProviderDetails(record)}
+        />
       ),
     },
   ];
@@ -91,6 +119,54 @@ const Vendors = () => {
         pagination={{ pageSize: 10 }}
         className="custom-table"
       />
+
+      <Modal
+        title={null}
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+        width={400}
+      >
+        {selectedProvider && (
+          <div className="text-center">
+            <div className="mb-6">
+              <img
+                src={
+                  selectedProvider.profileImg || "https://placeholder.com/150"
+                }
+                alt={selectedProvider.serviceProvider}
+                className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+              />
+              <p className="text-lg font-medium">{selectedProvider.category}</p>
+            </div>
+
+            <div className="space-y-4 text-left">
+              <div>
+                <p className="text-gray-600 mb-1">Name:</p>
+                <p className="font-medium">
+                  {selectedProvider.serviceProvider}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-600 mb-1">Email:</p>
+                <p className="font-medium">{selectedProvider.email}</p>
+              </div>
+              <div>
+                <p className="text-gray-600 mb-1">Phone:</p>
+                <p className="font-medium">{selectedProvider.phone}</p>
+              </div>
+              <div>
+                <p className="text-gray-600 mb-1">Country:</p>
+                <p className="font-medium">{selectedProvider.country}</p>
+              </div>
+              <div>
+                <p className="text-gray-600 mb-1">Location:</p>
+                <p className="font-medium">{selectedProvider.location}</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
