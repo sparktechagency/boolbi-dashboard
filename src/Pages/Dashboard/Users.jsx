@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Table, Button, Space, Modal } from "antd";
 import { FaEye } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 const Users = () => {
   const [pageSize, setPageSize] = useState(10);
@@ -94,11 +95,13 @@ const Users = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <FaEye
-          size={18}
-          className="text-blue-500 cursor-pointer"
-          onClick={() => showUserDetails(record)}
-        />
+        <Link to={`/customers/${record?.serialNo}`}>
+          <FaEye
+            size={18}
+            className="text-blue-500 cursor-pointer"
+            // onClick={() => showUserDetails(record)}
+          />
+        </Link>
       ),
     },
   ];

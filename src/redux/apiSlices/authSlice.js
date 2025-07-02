@@ -6,7 +6,7 @@ const authSlice = api.injectEndpoints({
       query: (data) => {
         return {
           method: "POST",
-          url: "auth/verify-email",
+          url: "/auth/verify-otp",
           body: data,
         };
       },
@@ -15,7 +15,7 @@ const authSlice = api.injectEndpoints({
       query: (data) => {
         return {
           method: "POST",
-          url: "/auth/login",
+          url: "/auth/sign-in",
           body: data,
         };
       },
@@ -31,7 +31,7 @@ const authSlice = api.injectEndpoints({
       query: (data) => {
         return {
           method: "POST",
-          url: "auth/forget-password",
+          url: "/auth/send-otp",
           body: data,
         };
       },
@@ -40,11 +40,8 @@ const authSlice = api.injectEndpoints({
       query: (data) => {
         return {
           method: "POST",
-          url: "/auth/reset-password",
+          url: "/auth/forget-password",
           body: data,
-          headers: {
-            Authorization: localStorage.getItem("Authorization"),
-          },
         };
       },
     }),
@@ -113,7 +110,7 @@ const authSlice = api.injectEndpoints({
       query: () => {
         return {
           method: "GET",
-          url: "/admin/profile",
+          url: "/user",
         };
       },
     }),

@@ -2,6 +2,7 @@ import { Button, Form, Input } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useForgotPasswordMutation } from "../../redux/apiSlices/authSlice"; // Your RTK Query hook for forgot password
+import toast from "react-hot-toast";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const ForgotPassword = () => {
 
       // If the response is successful, navigate to the OTP page with email
       if (response?.success) {
+        toast.success(response?.message || "OTP sent successfully!");
         navigate(`/auth/verify-otp?email=${values.email}`);
       } else {
         // Handle failure, display error message if needed

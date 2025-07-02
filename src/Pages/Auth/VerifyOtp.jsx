@@ -24,11 +24,11 @@ const VerifyOtp = () => {
     try {
       const response = await otpVerify({
         email,
-        oneTimeCode: parseInt(otp),
+        otp: parseInt(otp),
       }).unwrap();
 
       if (response?.success) {
-        localStorage.setItem("Authorization", response.data);
+        localStorage.setItem("Authorization", response.data?.token);
         navigate(`/auth/reset-password?email=${email}`);
       } else {
         console.error("OTP verification failed");
@@ -68,14 +68,14 @@ const VerifyOtp = () => {
           <OTPInput
             value={otp}
             onChange={setOtp}
-            numInputs={6}
+            numInputs={4}
             inputStyle={{
               height: 50,
               width: 50,
               borderRadius: "8px",
               margin: "16px",
               fontSize: "20px",
-              border: "1px solid #8b0000",
+              border: "1px solid #4A4F61",
               color: "#2B2A2A",
               outline: "none",
               marginBottom: 10,
@@ -105,7 +105,7 @@ const VerifyOtp = () => {
               border: "1px solid #d9d9d9",
               outline: "none",
               boxShadow: "none",
-              background: "#8b0000",
+              background: "#4A4F61",
               color: "white",
             }}
           >

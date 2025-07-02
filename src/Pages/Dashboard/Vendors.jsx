@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Table, Button, Modal } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const Vendors = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -94,12 +95,14 @@ const Vendors = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Button
-          type="text"
-          icon={<EyeOutlined />}
-          className="text-[#63666A]"
-          onClick={() => showProviderDetails(record)}
-        />
+        <Link to={`/service-provider/${record?.serialNo}`}>
+          <Button
+            type="text"
+            icon={<EyeOutlined />}
+            className="text-[#63666A]"
+            // onClick={() => showProviderDetails(record)}
+          />
+        </Link>
       ),
     },
   ];

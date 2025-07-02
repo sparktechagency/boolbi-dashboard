@@ -10,9 +10,11 @@ const ResetPassword = () => {
   // const [changePassword] = useChangePasswordMutation(); // Destructure mutation with loading state
   const [resetPassword] = useResetPasswordMutation(); // Destructure mutation with loading state
 
+  const oneTimeToken = localStorage.getItem("Authorization");
+
   const onFinish = async (values) => {
     console.log({ email, ...values });
-    const data = { email, ...values }; // Combine email and new password values into an object
+    const data = { email, token: oneTimeToken, ...values }; // Combine email and new password values into an object
 
     try {
       const response = await resetPassword(data).unwrap();
@@ -42,7 +44,7 @@ const ResetPassword = () => {
       <Form layout="vertical" onFinish={onFinish}>
         {/* New Password */}
         <Form.Item
-          name="newPassword"
+          name="password"
           label={<p className="font-semibold text-[#5C5C5C]">New Password</p>}
           rules={[
             { required: true, message: "Please input your new password!" },
@@ -107,7 +109,7 @@ const ResetPassword = () => {
               height: 45,
               fontWeight: "400px",
               fontSize: "18px",
-              background: "#8b0000",
+              background: "#4A4F61",
               marginTop: 20,
               borderRadius: "8px",
               color: "white",

@@ -8,25 +8,27 @@ import Cookies from "js-cookie";
 
 const Login = () => {
   const navigate = useNavigate();
-  // const [rememberMe, setRememberMe] = useState(false); // Track checkbox state
+  const [rememberMe, setRememberMe] = useState(false); // Track checkbox state
 
-  // const [login] = useLoginMutation();
+  const [login] = useLoginMutation();
 
   const onFinish = async (values) => {
-    try {
-      // console.log(values);
-      // const response = await login(values).unwrap();
-      // const { accessToken } = response?.data;
-      // const { refreshToken } = response?.data;
+    const data = {
+      email: values.email,
+      password: values.password,
+      deviceID: "111111",
+    };
 
-      if (values) {
-        // localStorage.setItem("authToken", accessToken);
-        // localStorage.setItem("refreshToken", refreshToken);
-        // Cookies.set("refreshToken", refreshToken);
+    try {
+      const response = await login(data).unwrap();
+
+      console.log(response);
+      const accessToken = response?.data;
+
+      if (rememberMe) {
+        localStorage.setItem("authToken", accessToken);
       } else {
-        // sessionStorage.setItem("authToken", accessToken);
-        // localStorage.setItem("refreshToken", refreshToken);
-        // Cookies.set("refreshToken", refreshToken);
+        sessionStorage.setItem("authToken", accessToken);
       }
 
       navigate("/");

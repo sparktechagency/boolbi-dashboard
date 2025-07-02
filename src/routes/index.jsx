@@ -18,8 +18,6 @@ import UserProfile from "../Pages/Dashboard/AdminProfile/UserProfile";
 import TermsAndCondition from "../Pages/Dashboard/TermsAndCondition";
 import Vendors from "../Pages/Dashboard/Vendors";
 import OurTransactions from "../Pages/Dashboard/OurTransactions";
-import AboutUs from "../components/ui/Settings/AboutUs";
-import Orders from "../Pages/Dashboard/Orders";
 import Vendor from "../Pages/Dashboard/Vendor";
 import JobCategory from "../Pages/Dashboard/JobCategory";
 import Language from "../Pages/Dashboard/Language";
@@ -43,21 +41,20 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "/user/profile/:id",
-        element: <User />,
-      },
-      {
-        path: "/barber/profile/:id",
-        element: <Vendor />,
-      },
-
-      {
         path: "/customers",
         element: <Users />,
       },
       {
+        path: "/customers/:id",
+        element: <User />,
+      },
+      {
         path: "/service-provider",
         element: <Vendors />,
+      },
+      {
+        path: "/service-provider/:id",
+        element: <Vendor />,
       },
       {
         path: "/category",
