@@ -45,6 +45,16 @@ const dashboardSlice = api.injectEndpoints({
         };
       },
     }),
+
+    // payment history
+    paymentHistory: builder.query({
+      query: ({ page, limit }) => {
+        return {
+          method: "GET",
+          url: `/admin/payment?page=${page}&limit=${limit}`,
+        };
+      },
+    }),
   }),
 });
 
@@ -54,4 +64,5 @@ export const {
   useBestServicesQuery,
   useEngagementDataQuery,
   useVendorsConversionDataQuery,
+  usePaymentHistoryQuery,
 } = dashboardSlice;

@@ -17,7 +17,7 @@ const Header = () => {
       </div>
     );
   }
-  const adminData = userData?.data?.user;
+  const adminData = userData?.data;
   // console.log(adminData);
 
   return (
@@ -36,15 +36,17 @@ const Header = () => {
             height: 45,
           }}
           src={
-            adminData?.profileImg
-              ? `${imageUrl}/${adminData?.profileImg}`
+            adminData?.profileImage
+              ? adminData?.profileImage?.startsWith("http")
+                ? adminData?.profileImage
+                : `${imageUrl}${adminData?.profileImage}`
               : logo
           }
           alt="person-male--v2"
           className="clip"
         />
         <div className="flex pr-2 flex-col">
-          <p className="text-xl">{adminData?.name || "SUPER ADMIN"}</p>
+          <p className="text-xl">{adminData?.fullName || "SUPER ADMIN"}</p>
           <p className="text-sm text-gray-500">{userData?.data?.role}</p>
         </div>
       </div>
