@@ -10,22 +10,46 @@ const userSlice = api.injectEndpoints({
         };
       },
     }),
-    users: builder.query({
-      query: () => {
+    customers: builder.query({
+      query: ({ page, limit }) => {
         return {
           method: "GET",
-          url: "/user",
+          url: `/admin/customer?page=${page}&limit=${limit}`,
         };
       },
+      providesTags: ["customers"],
     }),
-    vendors: builder.query({
-      query: () => {
+
+    getCustomerById: builder.query({
+      query: (id) => {
         return {
           method: "GET",
-          url: "/user?role=VENDOR",
+          url: `/admin/customer?id=${id}`,
         };
       },
+      providesTags: ["customers"],
     }),
+
+    getAllProviders: builder.query({
+      query: ({ page, limit }) => {
+        return {
+          method: "GET",
+          url: `/admin/provider?page=${page}&limit=${limit}`,
+        };
+      },
+      providesTags: ["providers"],
+    }),
+
+    getProviderById: builder.query({
+      query: (id) => {
+        return {
+          method: "GET",
+          url: `/admin/provider?id=${id}`,
+        };
+      },
+      providesTags: ["providers"],
+    }),
+
     userById: builder.query({
       query: (id) => {
         return {
@@ -33,13 +57,38 @@ const userSlice = api.injectEndpoints({
           url: `/user/profile/${id}`,
         };
       },
+      providesTags: ["providers"],
+    }),
+
+    changeUserStatus: builder.mutation({
+      query: ({ id, action }) => {
+        return {
+          method: "PATCH",
+          url: `/admin/customer?acction=${action}&user=${id}`,
+        };
+      },
+      invalidatesTags: ["customers"],
+    }),
+
+    changeProviderStatus: builder.mutation({
+      query: ({ id, action }) => {
+        return {
+          method: "PATCH",
+          url: `/admin/provider?acction=${action}&user=${id}`,
+        };
+      },
+      invalidatesTags: ["providers"],
     }),
   }),
 });
 
 export const {
   useAdminQuery,
-  useUsersQuery,
-  useVendorsQuery,
+  useCustomersQuery,
+  useGetCustomerByIdQuery,
+  useGetAllProvidersQuery,
+  useGetProviderByIdQuery,
   useUserByIdQuery,
+  useChangeUserStatusMutation,
+  useChangeProviderStatusMutation,
 } = userSlice;

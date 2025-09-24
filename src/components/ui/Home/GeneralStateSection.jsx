@@ -1,29 +1,8 @@
 import { FaUsers } from "react-icons/fa6";
 import salongoLogo from "../../../assets/salon-go-logo.png";
 
-const GeneralStateSection = () => {
-  // Simulated dummy data
-  const generalState = {
-    data: {
-      totalActiveUsers: 1500,
-      newSignups: 120,
-      totalActiveVendors: 45,
-      totalCompletedOrders: 320,
-      totalServices: 75,
-    },
-  };
-
-  const isLoading = false; // Simulated loading state
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <img src={salongoLogo} alt="" />
-      </div>
-    );
-  }
-
-  const state = generalState?.data;
+const GeneralStateSection = ({ generalState }) => {
+  const state = generalState;
 
   return (
     <div className="grid md:grid-cols-4 gap-3 md:h-[100px]">
@@ -34,7 +13,7 @@ const GeneralStateSection = () => {
         <div className="flex flex-col items-start">
           <h2 className="text-center text-2xl text-base">Total User</h2>
           <h3 className="text-center text-2xl font-semibold">
-            {state?.totalActiveUsers}
+            {state?.totalUser}
           </h3>
         </div>
       </div>
@@ -45,7 +24,7 @@ const GeneralStateSection = () => {
         <div className="flex flex-col items-start">
           <h2 className="text-center text-2xl text-base">New Revenue</h2>
           <h3 className="text-center text-2xl font-semibold">
-            {state?.newSignups}
+            ${state?.totalRevenue}
           </h3>
         </div>
       </div>
@@ -56,7 +35,7 @@ const GeneralStateSection = () => {
         <div className="flex flex-col items-start">
           <h2 className="text-center text-2xl text-base">total job request</h2>
           <h3 className="text-center text-2xl font-semibold">
-            {state?.totalActiveVendors}
+            {state?.totalJobRequest}
           </h3>
         </div>
       </div>
@@ -67,7 +46,7 @@ const GeneralStateSection = () => {
         <div className="flex flex-col items-start">
           <h2 className="text-center text-2xl text-base">total job post</h2>
           <h3 className="text-center text-2xl font-semibold">
-            {state?.totalCompletedOrders}
+            {state?.totalJobPost}
           </h3>
         </div>
       </div>

@@ -5,10 +5,6 @@ import { Link } from "react-router-dom";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import {
-  useFetchAdminProfileQuery,
-  useUpdateAdminProfileMutation,
-} from "../../../redux/apiSlices/authSlice";
 import logo from "../../../assets/randomProfile2.jpg";
 import toast from "react-hot-toast";
 import rentMeLogo from "../../../assets/navLogo.png";
@@ -21,12 +17,8 @@ const PersonalInfo = () => {
   const [file, setFile] = useState(null);
   const [form] = Form.useForm();
 
-  const isLoading = false;
-
-  // const { data: fetchAdminProfile, isLoading } = useFetchAdminProfileQuery();
-  // const [updateAdminProfile] = useUpdateAdminProfileMutation();
-
-  const fetchAdminProfile = [];
+  const { data: fetchAdminProfile, isLoading } = useFetchAdminProfileQuery();
+  const [updateAdminProfile] = useUpdateAdminProfileMutation();
 
   const adminData = fetchAdminProfile?.data;
 

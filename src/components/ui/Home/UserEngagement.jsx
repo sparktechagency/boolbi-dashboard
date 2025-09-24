@@ -9,12 +9,25 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useEngagementDataQuery } from "../../../redux/apiSlices/dashboardSlice";
+import { Spin } from "antd";
 
 const UserEngagement = () => {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 12 }, (_, i) => currentYear - 10 + i);
-
   const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+
+  const { data: engagementData, isLoading } = useEngagementDataQuery({
+    year: selectedYear,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spin />
+      </div>
+    );
+  }
 
   // Dummy data for User Engagement
   const dummyChartData = [
@@ -32,7 +45,7 @@ const UserEngagement = () => {
     { month: "December", orderCount: 310, userCount: 420 },
   ];
 
-  const chartData = dummyChartData;
+  const chartData = engagementData?.data || [];
 
   return (
     <div className="bg-white p-5 w-[100%] h-[410px] rounded-2xl border">

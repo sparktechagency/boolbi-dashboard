@@ -7,28 +7,28 @@ import GeneralStateSection from "../../components/ui/Home/GeneralStateSection";
 import Professionals from "../../components/ui/Home/Professionals";
 import TotalRevenue from "../../components/ui/Home/TotalRevenue";
 import TotalUserChart from "../../components/ui/Home/TotalUserChart";
+import { useDashboardOverviewQuery } from "../../redux/apiSlices/dashboardSlice";
+import { Spin } from "antd";
 
 const Home = () => {
-  const orderSummary = {
-    doneByProfessionals: 65,
-    doneByFreelancers: 35,
-  };
-
-  const isLoading = false;
+  const { data: dashboardOverview, isLoading } = useDashboardOverviewQuery();
 
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <img src={rentMeLogo} alt="" />
+        <Spin />
       </div>
     );
   }
 
+  const generalState = dashboardOverview?.data || [];
+  const yearlyRevenueData = generalState?.yearlyRevenueData || [];
+
   return (
     <div>
-      <GeneralStateSection />
+      <GeneralStateSection generalState={generalState} />
       <div>
-        <TotalRevenue />
+        <TotalRevenue yearlyRevenueData={yearlyRevenueData} />
       </div>
       <div className="flex items-center justify-center gap-3 mt-3">
         <div className="w-[50%]">

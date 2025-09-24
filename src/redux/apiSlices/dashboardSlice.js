@@ -2,11 +2,11 @@ import { api } from "../api/baseApi";
 
 const dashboardSlice = api.injectEndpoints({
   endpoints: (builder) => ({
-    generalStats: builder.query({
+    dashboardOverview: builder.query({
       query: () => {
         return {
           method: "GET",
-          url: "/dashboard/general-stat",
+          url: "/admin",
         };
       },
     }),
@@ -15,6 +15,15 @@ const dashboardSlice = api.injectEndpoints({
         return {
           method: "GET",
           url: `/dashboard/overall-stat?range=${range}`,
+        };
+      },
+    }),
+
+    engagementData: builder.query({
+      query: ({ year }) => {
+        return {
+          method: "GET",
+          url: `admin/engagement?year=${year}`,
         };
       },
     }),
@@ -40,8 +49,9 @@ const dashboardSlice = api.injectEndpoints({
 });
 
 export const {
-  useGeneralStatsQuery,
+  useDashboardOverviewQuery,
   useOverAllStateQuery,
   useBestServicesQuery,
+  useEngagementDataQuery,
   useVendorsConversionDataQuery,
 } = dashboardSlice;

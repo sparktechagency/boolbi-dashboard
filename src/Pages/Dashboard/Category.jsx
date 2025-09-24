@@ -1,26 +1,50 @@
 import React, { useState } from "react";
-import { Table, Button, Modal, Form, Input } from "antd";
+import { Table, Button, Modal, Form, Input, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { FaEye, FaTrash } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
+import {
+  useAddCategoryMutation,
+  useCategoriesQuery,
+} from "../../redux/apiSlices/categorySlice";
+import { imageUrl } from "../../redux/api/baseApi";
+import toast from "react-hot-toast";
 
 const Category = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
 
-  // Dummy data for categories
-  const categories = [
-    { key: "1", name: "UX/UI Designer" },
-    { key: "2", name: "Web Developer" },
-    { key: "3", name: "Mobile App Developer" },
-    { key: "4", name: "Graphic Designer" },
-  ];
+  const { data: allCategory, isLoading } = useCategoriesQuery();
+  const [addCategory, { isLoading: addCategoryLoading }] =
+    useAddCategoryMutation();
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin />
+      </div>
+    );
+  }
+
+  const categories = allCategory?.data || [];
 
   const columns = [
     {
       title: "Serial No",
       key: "serialNo",
       render: (_, record, index) => String(index + 1).padStart(2, "0"),
+    },
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (image, record) => (
+        <img
+          src={image?.startsWith("http") ? image : `${imageUrl}/${image}`}
+          alt={record.name}
+          className="w-12 h-12 rounded-lg"
+        />
+      ),
     },
     {
       title: "Category Name",
@@ -32,7 +56,6 @@ const Category = () => {
       key: "action",
       render: (_, record) => (
         <div className="flex space-x-2">
-          <FaEye size={18} className="text-blue-500 cursor-pointer" />
           <FaEdit size={18} className="text-green-500 cursor-pointer" />
           <FaTrash size={18} className="text-red-500 cursor-pointer" />
         </div>
@@ -40,8 +63,18 @@ const Category = () => {
     },
   ];
 
-  const handleAddCategory = (values) => {
-    console.log("New category:", values);
+  const handleAddCategory = async (values) => {
+    try {
+      const res = await addCategory(values).unwrap();
+      if (res?.success) {
+        toast.success(res?.message || "Category added successfully");
+      } else {
+        toast.error(res?.message || "Failed to add category");
+      }
+    } catch (error) {
+      toast.error(error?.message || "Failed to add category");
+    }
+
     form.resetFields();
     setIsModalOpen(false);
   };
@@ -79,7 +112,7 @@ const Category = () => {
           className="mt-4"
         >
           <Form.Item
-            name="categoryName"
+            name="category"
             label="Category Name"
             rules={[
               {
@@ -100,7 +133,7 @@ const Category = () => {
               htmlType="submit"
               className="bg-[#63666A] hover:bg-[#63666A]/90"
             >
-              Add
+              {addCategoryLoading ? "Loading..." : "Add"}
             </Button>
           </Form.Item>
         </Form>

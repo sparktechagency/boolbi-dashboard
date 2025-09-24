@@ -1,48 +1,50 @@
 import React, { useState } from "react";
-import { Table, Button, Modal } from "antd";
+import { Table, Button, Modal, Spin, Alert } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { useGetAllProvidersQuery } from "../../redux/apiSlices/userSlice";
+import { imageUrl } from "../../redux/api/baseApi";
 
 const Vendors = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
-  const data = [
-    {
-      serialNo: "01",
-      serviceProvider: "Md Kamran Khan",
-      category: "UX/UI Designer",
-      status: "Active",
-      email: "Kamran.Uliya@Gmail.Com",
-      phone: "01333327633",
-      country: "Germany",
-      location: "Berlin Germany",
-      profileImg: "https://i.ibb.co.com/Z6nyF6q/mukesh-Ambani.jpg",
-    },
-    {
-      serialNo: "02",
-      serviceProvider: "Sam Johnson",
-      category: "Frontend Developer",
-      status: "Block",
-      email: "sam.j@gmail.com",
-      phone: "01444438744",
-      country: "United States",
-      location: "New York City",
-      profileImg: "https://i.ibb.co.com/Z6nyF6q/mukesh-Ambani.jpg",
-    },
-    {
-      serialNo: "03",
-      serviceProvider: "Ahmed Hassan",
-      category: "Backend Developer",
-      status: "Report",
-      email: "ahmed.h@gmail.com",
-      phone: "01555549855",
-      country: "UAE",
-      location: "Dubai",
-      profileImg: "https://i.ibb.co.com/Z6nyF6q/mukesh-Ambani.jpg",
-    },
-    // Add more data as needed
-  ];
+  const {
+    data: providers,
+    isLoading,
+    error,
+  } = useGetAllProvidersQuery({
+    page: page,
+    limit: pageSize,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <Alert
+          message="Error"
+          description="Failed to fetch providers data. Please try again later."
+          type="error"
+          showIcon
+        />
+      </div>
+    );
+  }
+
+  // Handle different possible response structures
+  const providerDetails =
+    providers?.data?.data || providers?.data || providers || [];
+  const totalCount = providers?.data?.total || providers?.total || 0;
 
   const showProviderDetails = (record) => {
     setSelectedProvider(record);
@@ -54,11 +56,17 @@ const Vendors = () => {
       title: "Serial No",
       dataIndex: "serialNo",
       key: "serialNo",
+      render: (serialNo, record, index) => (page - 1) * pageSize + index + 1,
     },
     {
       title: "Service Providers",
-      dataIndex: "serviceProvider",
-      key: "serviceProvider",
+      dataIndex: "fullName",
+      key: "fullName",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
       title: "Category",
@@ -67,16 +75,22 @@ const Vendors = () => {
     },
     {
       title: "Status",
-      dataIndex: "status",
-      key: "status",
+      dataIndex: "accountStatus",
+      key: "accountStatus",
       render: (status) => {
         let className = "";
         switch (status) {
-          case "Active":
+          case "ACTIVE":
+          case "ACTIVE":
             className = "bg-[#E7FFE7] text-[#00B907]";
             break;
-          case "Block":
+          case "BLOCK":
+          case "BLOCK":
             className = "bg-[#FFE7E7] text-[#FF0000]";
+            break;
+          case "PENDING":
+          case "Pending":
+            className = "bg-[#FFF4E6] text-[#FF8C00]";
             break;
           case "Report":
             className = "bg-[#63666A] text-white";
@@ -95,12 +109,12 @@ const Vendors = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Link to={`/service-provider/${record?.serialNo}`}>
+        <Link to={`/service-provider/${record?._id}`}>
           <Button
             type="text"
             icon={<EyeOutlined />}
             className="text-[#63666A]"
-            // onClick={() => showProviderDetails(record)}
+            onClick={() => showProviderDetails(record)}
           />
         </Link>
       ),
@@ -118,8 +132,22 @@ const Vendors = () => {
 
       <Table
         columns={columns}
-        dataSource={data}
-        pagination={{ pageSize: 10 }}
+        dataSource={providerDetails}
+        rowKey={(record) => record._id || record.id}
+        pagination={{
+          current: page,
+          pageSize: pageSize,
+          total: totalCount,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} providers`,
+          onChange: (newPage, newPageSize) => {
+            setPage(newPage);
+            if (newPageSize !== pageSize) {
+              setPageSize(newPageSize);
+              setPage(1); // Reset to first page when page size changes
+            }
+          },
+        }}
         className="custom-table"
       />
 

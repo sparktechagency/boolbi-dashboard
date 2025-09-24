@@ -1,48 +1,49 @@
 import React, { useState } from "react";
-import { Table, Button, Space, Modal } from "antd";
+import { Table, Modal, Spin, Alert } from "antd";
 import { FaEye } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { useCustomersQuery } from "../../redux/apiSlices/userSlice";
 
 const Users = () => {
   const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const data = [
-    {
-      serialNo: "01",
-      customerName: "Md Kamran Khan",
-      category: "UX/UI Designer",
-      status: "Active",
-      email: "Kamran.Uliya@Gmail.Com",
-      phone: "01333327633",
-      country: "Germany",
-      location: "Berlin Germany",
-      profileImg: "https://i.ibb.co.com/Z6nyF6q/mukesh-Ambani.jpg",
-    },
-    {
-      serialNo: "02",
-      customerName: "Mithila Khan",
-      category: "Frontend Developer",
-      status: "Active",
-      email: "mithuu@gmail.com",
-      phone: "01111111111",
-      country: "Bangladesh",
-      location: "Chittagong Road, Narayanganj",
-      profileImg: "https://i.ibb.co.com/GfNydhRW/random-Profile-Image.jpg",
-    },
-    {
-      serialNo: "03",
-      customerName: "Alex Chen",
-      category: "Full Stack Developer",
-      status: "Report",
-      email: "alex.chen@gmail.com",
-      phone: "01555549855",
-      country: "Canada",
-      location: "Toronto, Canada",
-      profileImg: "https://i.ibb.co.com/Z6nyF6q/mukesh-Ambani.jpg",
-    },
-  ];
+  const {
+    data: customers,
+    isLoading,
+    error,
+  } = useCustomersQuery({
+    page: page,
+    limit: pageSize,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <Alert
+          message="Error"
+          description="Failed to fetch customers data. Please try again later."
+          type="error"
+          showIcon
+        />
+      </div>
+    );
+  }
+
+  // Handle different possible response structures
+  const userDetails =
+    customers?.data?.data || customers?.data || customers || [];
+  const totalCount = customers?.data?.total || customers?.total || 0;
 
   const showUserDetails = (record) => {
     setSelectedUser(record);
@@ -54,31 +55,32 @@ const Users = () => {
       title: "Serial No",
       dataIndex: "serialNo",
       key: "serialNo",
+      render: (serialNo, record, index) => (page - 1) * pageSize + index + 1,
     },
     {
       title: "Customer Name",
-      dataIndex: "customerName",
-      key: "customerName",
+      dataIndex: "fullName",
+      key: "fullName",
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
       title: "Status",
-      dataIndex: "status",
-      key: "status",
+      dataIndex: "accountStatus",
+      key: "accountStatus",
       render: (status) => {
         let className = "";
         switch (status) {
-          case "Active":
+          case "ACTIVE":
             className = "bg-green-500 text-white";
             break;
-          case "Block":
+          case "BLOCKED":
             className = "bg-red-500 text-white";
             break;
-          case "Report":
+          case "REPORTED":
             className = "bg-gray-500 text-white";
             break;
           default:
@@ -95,11 +97,11 @@ const Users = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Link to={`/customers/${record?.serialNo}`}>
+        <Link to={`/customers/${record?._id}`}>
           <FaEye
             size={18}
             className="text-blue-500 cursor-pointer"
-            // onClick={() => showUserDetails(record)}
+            onClick={() => showUserDetails(record)}
           />
         </Link>
       ),
@@ -110,12 +112,28 @@ const Users = () => {
     <div className="bg-white rounded-xl p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold">Total Customer List</h2>
+        <p className="text-gray-600">Total: {totalCount} customers</p>
       </div>
 
       <Table
         columns={columns}
-        dataSource={data}
-        pagination={{ pageSize }}
+        dataSource={userDetails}
+        rowKey={(record) => record._id || record.id}
+        pagination={{
+          current: page,
+          pageSize: pageSize,
+          total: totalCount,
+
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} customers`,
+          onChange: (newPage, newPageSize) => {
+            setPage(newPage);
+            if (newPageSize !== pageSize) {
+              setPageSize(newPageSize);
+              setPage(1);
+            }
+          },
+        }}
         className="custom-table"
       />
 
@@ -131,7 +149,7 @@ const Users = () => {
             <div className="mb-6">
               <img
                 src={selectedUser.profileImg || "https://placeholder.com/150"}
-                alt={selectedUser.customerName}
+                alt={selectedUser.fullName}
                 className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
               />
               <p className="text-lg font-medium">{selectedUser.category}</p>
@@ -140,7 +158,7 @@ const Users = () => {
             <div className="space-y-4 text-left">
               <div>
                 <p className="text-gray-600 mb-1">Name:</p>
-                <p className="font-medium">{selectedUser.customerName}</p>
+                <p className="font-medium">{selectedUser.fullName}</p>
               </div>
               <div>
                 <p className="text-gray-600 mb-1">Email:</p>

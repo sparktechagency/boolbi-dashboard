@@ -23,12 +23,12 @@ const Login = () => {
       const response = await login(data).unwrap();
 
       console.log(response);
-      const accessToken = response?.data;
+      const accessToken = response?.data?.token;
 
       if (rememberMe) {
-        localStorage.setItem("authToken", accessToken);
+        localStorage.setItem("boolbieToken", accessToken);
       } else {
-        sessionStorage.setItem("authToken", accessToken);
+        sessionStorage.setItem("boolbieToken", accessToken);
       }
 
       navigate("/");

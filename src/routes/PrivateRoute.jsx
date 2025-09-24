@@ -10,7 +10,8 @@ const PrivateRoute = ({ children }) => {
 
   useEffect(() => {
     const authToken =
-      localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+      localStorage.getItem("boolbieToken") ||
+      sessionStorage.getItem("boolbieToken");
 
     if (!authToken) {
       toast.error("You are not authorized to access this. Please login first.");
@@ -27,15 +28,16 @@ const PrivateRoute = ({ children }) => {
         }
       } catch (error) {
         toast.error("Invalid token. Please login again.");
-        localStorage.removeItem("authToken");
-        sessionStorage.removeItem("authToken");
+        localStorage.removeItem("boolbieToken");
+        sessionStorage.removeItem("boolbieToken");
         navigate("/auth/login", { replace: true, state: { from: location } });
       }
     }
   }, [navigate, location]);
 
   const authToken =
-    localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+    localStorage.getItem("boolbieToken") ||
+    sessionStorage.getItem("boolbieToken");
   if (authToken) {
     try {
       const decodedToken = jwtDecode(authToken);
