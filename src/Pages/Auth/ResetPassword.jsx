@@ -71,13 +71,13 @@ const ResetPassword = () => {
           label={
             <p className="font-semibold text-[#5C5C5C]">Confirm Password</p>
           }
-          dependencies={["newPassword"]}
+          dependencies={["password"]}
           hasFeedback
           rules={[
             { required: true, message: "Please confirm your password!" },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue("newPassword") === value) {
+                if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }
                 return Promise.reject(

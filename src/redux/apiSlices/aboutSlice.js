@@ -16,23 +16,16 @@ const aboutUsSlice = api.injectEndpoints({
         };
       },
     }),
-    aboutUs: builder.query({
-      query: () => {
+    getSupportRequests: builder.query({
+      query: ({ page, limit }) => {
         return {
-          url: "/about/get-about",
+          url: `/admin/support?page=${page}&limit=${limit}`,
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
-          },
         };
-      },
-      transformResponse: ({ data }) => {
-        return data;
       },
     }),
   }),
 });
 
-export const { useUpdateAboutUsMutation, useAboutUsQuery } = aboutUsSlice;
+export const { useUpdateAboutUsMutation, useGetSupportRequestsQuery } =
+  aboutUsSlice;

@@ -1,43 +1,60 @@
 import React, { useState } from "react";
-import { Table, Select, Button, Modal, Form, Input } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
+import {
+  Table,
+  Select,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Spin,
+  Image,
+  Upload,
+  message,
+} from "antd";
+import { EyeOutlined, UploadOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useGetSupportRequestsQuery } from "../../redux/apiSlices/aboutSlice";
+import { imageUrl } from "../../redux/api/baseApi";
 
 const { TextArea } = Input;
 
 const SupportRequest = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [replyImage, setReplyImage] = useState(null);
   const [form] = Form.useForm();
 
-  const data = [
-    {
-      serialNo: "01",
-      userName: "Ebrahim",
-      email: "Ebrahim@Gmail.Com",
-      problemCategory: "System Problem",
-      status: "Pending",
-      message:
-        "I'm having issues with the login system. It keeps showing an error.",
-      date: "2024-01-15",
-    },
-    {
-      serialNo: "01",
-      userName: "Ebrahim",
-      email: "Ebrahim@Gmail.Com",
-      problemCategory: "System Problem",
-      status: "Solved",
-    },
-    // Add more data as needed
-  ];
+  const { data: getSupportRequests, isLoading } = useGetSupportRequestsQuery({
+    page: 1,
+    limit: 10,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spin />
+      </div>
+    );
+  }
+
+  const data = getSupportRequests?.data?.data || [];
 
   const handleReply = (values) => {
-    console.log("Reply to request:", selectedRequest, "Response:", values);
+    console.log(
+      "Reply to request:",
+      selectedRequest,
+      "Response:",
+      values,
+      "Image:",
+      replyImage
+    );
     form.resetFields();
+    setReplyImage(null);
     setIsModalOpen(false);
   };
 
   const showRequestDetails = (record) => {
     setSelectedRequest(record);
+    setReplyImage(null);
     setIsModalOpen(true);
   };
 
@@ -46,21 +63,22 @@ const SupportRequest = () => {
       title: "Serial No",
       dataIndex: "serialNo",
       key: "serialNo",
+      render: (_, record, index) => index + 1,
     },
     {
       title: "User Name",
-      dataIndex: "userName",
+      dataIndex: ["for", "fullName"],
       key: "userName",
     },
     {
       title: "Email",
-      dataIndex: "email",
+      dataIndex: ["for", "email"],
       key: "email",
     },
     {
       title: "Problem Category",
-      dataIndex: "problemCategory",
-      key: "problemCategory",
+      dataIndex: "category",
+      key: "category",
     },
     {
       title: "Status",
@@ -134,28 +152,53 @@ const SupportRequest = () => {
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <p className="text-gray-600">From:</p>
-                  <p className="font-medium">{selectedRequest.userName}</p>
+                  <p className="font-medium">
+                    {selectedRequest?.for?.fullName}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-600">Date:</p>
-                  <p className="font-medium">{selectedRequest.date}</p>
+                  <p className="font-medium">
+                    {selectedRequest?.createdAt
+                      ? new Date(
+                          selectedRequest?.createdAt
+                        ).toLocaleDateString()
+                      : "-"}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-600">Category:</p>
                   <p className="font-medium">
-                    {selectedRequest.problemCategory}
+                    {selectedRequest?.category || "-"}
                   </p>
                 </div>
                 <div>
                   <p className="text-gray-600">Status:</p>
-                  <p className="font-medium">{selectedRequest.status}</p>
+                  <p className="font-medium">
+                    {selectedRequest?.status || "-"}
+                  </p>
                 </div>
               </div>
               <div>
                 <p className="text-gray-600 mb-2">Message:</p>
-                <p className="bg-white p-3 rounded">
-                  {selectedRequest.message}
-                </p>
+                <div className="flex gap-4 w-full">
+                  <p className="bg-white p-3 rounded flex-1 w-[70%]">
+                    {selectedRequest?.message || "-"}
+                  </p>
+                  <div className="w-[30%]">
+                    {selectedRequest?.image && (
+                      <Image
+                        src={
+                          selectedRequest?.image?.startsWith("http")
+                            ? selectedRequest?.image
+                            : `${imageUrl}${selectedRequest?.image}`
+                        }
+                        alt="Support request attachment"
+                        className="object-cover rounded"
+                      />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -175,6 +218,67 @@ const SupportRequest = () => {
                   placeholder="Type your response here..."
                   className="resize-none"
                 />
+              </Form.Item>
+
+              <Form.Item label="Attach Image (Optional)">
+                <div className="space-y-3">
+                  <Upload
+                    beforeUpload={(file) => {
+                      const isImage = file.type.startsWith("image/");
+                      if (!isImage) {
+                        message.error("You can only upload image files!");
+                        return false;
+                      }
+                      const isLt5M = file.size / 1024 / 1024 < 5;
+                      if (!isLt5M) {
+                        message.error("Image must be smaller than 5MB!");
+                        return false;
+                      }
+
+                      const reader = new FileReader();
+                      reader.onload = (e) => {
+                        setReplyImage({
+                          file: file,
+                          preview: e.target.result,
+                        });
+                      };
+                      reader.readAsDataURL(file);
+                      return false; // Prevent auto upload
+                    }}
+                    showUploadList={false}
+                    accept="image/*"
+                  >
+                    <Button icon={<UploadOutlined />} disabled={!!replyImage}>
+                      {replyImage ? "Image Selected" : "Upload Image"}
+                    </Button>
+                  </Upload>
+
+                  {replyImage && (
+                    <div className="flex items-center gap-3 p-3 border rounded-lg bg-gray-50">
+                      <Image
+                        src={replyImage.preview}
+                        alt="Reply attachment"
+                        width={60}
+                        height={60}
+                        className="object-cover rounded"
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">
+                          {replyImage.file.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {(replyImage.file.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                      </div>
+                      <Button
+                        type="text"
+                        icon={<DeleteOutlined />}
+                        onClick={() => setReplyImage(null)}
+                        className="text-red-500 hover:text-red-700"
+                      />
+                    </div>
+                  )}
+                </div>
               </Form.Item>
 
               <Form.Item className="mb-0 flex justify-end">

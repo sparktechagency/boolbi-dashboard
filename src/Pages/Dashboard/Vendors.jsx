@@ -81,10 +81,8 @@ const Vendors = () => {
         let className = "";
         switch (status) {
           case "ACTIVE":
-          case "ACTIVE":
             className = "bg-[#E7FFE7] text-[#00B907]";
             break;
-          case "BLOCK":
           case "BLOCK":
             className = "bg-[#FFE7E7] text-[#FF0000]";
             break;

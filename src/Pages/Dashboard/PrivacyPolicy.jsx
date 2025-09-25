@@ -7,40 +7,33 @@ import {
   usePrivacyPolicyQuery,
   useUpdatePricyPolicyMutation,
 } from "../../redux/apiSlices/privacyPolicySlice";
+import { Spin } from "antd";
 
 const PrivacyPolicy = () => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
 
-  const isLoading = false;
-
   useEffect(() => {
     setContent(content);
   }, []);
 
-  // const {
-  //   data: privacyPolicy,
-  //   isLoading,
-  //   refetch,
-  // } = usePrivacyPolicyQuery(selectedTab);
+  const { data: privacyPolicy, isLoading, refetch } = usePrivacyPolicyQuery();
 
-  // const [updatePricyPolicy] = useUpdatePricyPolicyMutation();
+  const [updatePricyPolicy] = useUpdatePricyPolicyMutation();
 
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <img src={rentMeLogo} alt="" />
+        <Spin />
       </div>
     );
   }
 
-  const privacyPolicy = [];
-
-  const privacyPolicyData = privacyPolicy?.content;
+  const privacyPolicyData = privacyPolicy;
 
   const termsDataSave = async () => {
     const data = {
-      content: content,
+      policy: content,
     };
 
     try {
@@ -64,7 +57,7 @@ const PrivacyPolicy = () => {
 
       <JoditEditor
         ref={editor}
-        value={content}
+        value={privacyPolicyData}
         onChange={(newContent) => {
           setContent(newContent);
         }}

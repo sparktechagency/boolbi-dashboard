@@ -7,40 +7,37 @@ import {
 } from "../../redux/apiSlices/termsAndConditionSlice";
 import toast from "react-hot-toast";
 import rentMeLogo from "../../assets/navLogo.png";
+import { Spin } from "antd";
 
 const TermsAndCondition = () => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
 
-  const isLoading = false;
-
   useEffect(() => {
     setContent(content);
   }, []);
 
-  // const {
-  //   data: termsAndCondition,
-  //   isLoading,
-  //   refetch,
-  // } = useTermsAndConditionQuery(selectedTab);
+  const {
+    data: termsAndCondition,
+    isLoading,
+    refetch,
+  } = useTermsAndConditionQuery();
 
-  // const [updateTermsAndConditions] = useUpdateTermsAndConditionsMutation();
-
-  const termsAndCondition = [];
+  const [updateTermsAndConditions] = useUpdateTermsAndConditionsMutation();
 
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <img src={rentMeLogo} alt="" />
+        <Spin />
       </div>
     );
   }
 
-  const termsAndConditionData = termsAndCondition?.content;
+  const termsAndConditionData = termsAndCondition;
 
   const termsDataSave = async () => {
     const data = {
-      content: content,
+      data: content,
     };
 
     try {
@@ -63,7 +60,7 @@ const TermsAndCondition = () => {
 
       <JoditEditor
         ref={editor}
-        value={content}
+        value={termsAndConditionData}
         onChange={(newContent) => {
           setContent(newContent);
         }}

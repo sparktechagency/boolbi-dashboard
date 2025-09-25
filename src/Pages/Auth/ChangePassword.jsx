@@ -1,4 +1,4 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Spin } from "antd";
 import React, { useState } from "react";
 import rentMeLogo from "../../assets/navLogo.png";
 
@@ -6,30 +6,29 @@ import toast from "react-hot-toast";
 import { useChangePasswordMutation } from "../../redux/apiSlices/authSlice";
 
 const ChangePassword = () => {
-  const isLoading = false;
   const [form] = Form.useForm();
   const [errorMessages, setErrorMessages] = useState({
     newPassError: "",
     conPassError: "",
   });
 
-  // const [changePassword, { isLoading }] = useChangePasswordMutation();
+  const [changePassword, { isLoading }] = useChangePasswordMutation();
 
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <img src={rentMeLogo} alt="" />
+        <Spin />
       </div>
     );
   }
   const validatePasswordChange = (values) => {
     let errors = {};
 
-    if (values.currentPassword === values.newPassword) {
+    if (values.currentPassword === values.password) {
       errors.newPassError = "The New password is similar to the old Password";
     }
 
-    if (values.newPassword !== values.confirmPassword) {
+    if (values.password !== values.confirmPassword) {
       errors.conPassError = "New Password and Confirm Password don't match";
     }
 
@@ -85,7 +84,7 @@ const ChangePassword = () => {
         )}
 
         <Form.Item
-          name="newPassword"
+          name="password"
           rules={[
             {
               required: true,

@@ -79,6 +79,38 @@ const userSlice = api.injectEndpoints({
       },
       invalidatesTags: ["providers"],
     }),
+
+    //admin
+    getAllAdmins: builder.query({
+      query: () => {
+        return {
+          method: "GET",
+          url: "/admin/make",
+        };
+      },
+      providesTags: ["AdminData"],
+    }),
+
+    addNewAdmin: builder.mutation({
+      query: (data) => {
+        return {
+          method: "POST",
+          url: "/admin/make",
+          body: data,
+        };
+      },
+      invalidatesTags: ["AdminData"],
+    }),
+
+    deleteAdmin: builder.mutation({
+      query: (id) => {
+        return {
+          method: "DELETE",
+          url: `/admin/make?adminId=${id}`,
+        };
+      },
+      invalidatesTags: ["AdminData"],
+    }),
   }),
 });
 
@@ -91,4 +123,8 @@ export const {
   useUserByIdQuery,
   useChangeUserStatusMutation,
   useChangeProviderStatusMutation,
+
+  useGetAllAdminsQuery,
+  useAddNewAdminMutation,
+  useDeleteAdminMutation,
 } = userSlice;
