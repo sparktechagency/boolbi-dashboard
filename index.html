@@ -1,32 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Character Encoding -->
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="src/assets/logo.png" />
+
+    <!-- Responsive Scaling -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Metadata -->
+    <meta
+      name="description"
+      content="BOOLBI Dashboard - Manage your platform with ease."
+    />
+    <meta name="theme-color" content="#0f172a" />
+
+    <!-- Title -->
     <title>Dashboard - BOOLBI</title>
-  </head>
-  <body>
-    <div id="root"></div>
 
-    <script type="module" src="/src/main.jsx"></script>
+    <!-- Favicon (fix MIME type to match your file format) -->
+    <link rel="icon" type="image/png" href="/src/assets/logo.png" />
 
+    <!-- Google Translate Script -->
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script>
       function googleTranslateElementInit() {
-        new google.translate.TranslateElement(
-          {
-            defaultLanguage: "en",
-            pageLanguage: "en",
-            includedLanguages: "en,es,fr",
-            //layout:google.translate.TranslateElement.InlineLayout.SIMPLE,
-            //showIcon:true,
-            gtl: "en",
-            multilanguagePage: true,
-          },
-          "google_translate_element"
-        );
+        console.log("🚀 Google Translate initialization started");
+        
+        try {
+          new google.translate.TranslateElement(
+            {
+              pageLanguage: "en",
+              includedLanguages: "en,es,de,tr",
+              autoDisplay: false,
+              layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            },
+            "google_translate_element"
+          );
+          console.log("✅ Google Translate element created successfully");
+          
+          // Check if element was actually created
+          setTimeout(() => {
+            const element = document.getElementById('google_translate_element');
+            const combo = document.querySelector('.goog-te-combo');
+            console.log("🔍 Post-init verification:");
+            console.log("  - Element exists:", !!element);
+            console.log("  - Combo exists:", !!combo);
+            console.log("  - Google API available:", !!window.google?.translate);
+            
+            // Check for existing translation parameters on page load
+            const hash = window.location.hash;
+            const googtransParam = new URLSearchParams(window.location.search).get('googtrans');
+            const googtransCookie = document.cookie.split(';').find(c => c.trim().startsWith('googtrans='));
+            
+            console.log("🔍 Existing translation parameters:");
+            console.log("  - Hash:", hash);
+            console.log("  - URL param:", googtransParam);
+            console.log("  - Cookie:", googtransCookie);
+            
+            // If we have translation parameters, try to apply them
+            if (hash.includes('googtrans') || googtransParam || googtransCookie) {
+              console.log("🌐 Found existing translation parameters, attempting to apply...");
+              
+              // Try to trigger translation with existing parameters
+              if (combo && googtransParam) {
+                const langCode = googtransParam.split('/')[2]; // Extract language from /en/es format
+                if (langCode && langCode !== 'en') {
+                  console.log(`🎯 Attempting to set combo to: ${langCode}`);
+                  setTimeout(() => {
+                    combo.value = langCode;
+                    combo.dispatchEvent(new Event('change', { bubbles: true }));
+                  }, 100);
+                }
+              }
+            }
+          }, 1000);
+          
+        } catch (error) {
+          console.error("❌ Google Translate initialization failed:", error);
+        }
       }
+      
+      // Additional debugging
+      window.addEventListener('load', () => {
+        console.log("🔍 Page loaded, checking Google Translate...");
+        console.log("  - Google API:", !!window.google);
+        console.log("  - Translate API:", !!window.google?.translate);
+        console.log("  - Element:", !!document.getElementById('google_translate_element'));
+      });
     </script>
+  </head>
+
+  <body>
+    <!-- React Mount Point -->
+    <div id="root"></div>
+
+    <!-- Google Translate Container -->
+    <div
+      id="google_translate_element"
+      style="
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+      "
+    ></div>
+
+    <!-- React/Vite Entry Script -->
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -12,7 +12,10 @@ import {
   message,
 } from "antd";
 import { EyeOutlined, UploadOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useGetSupportRequestsQuery } from "../../redux/apiSlices/aboutSlice";
+import {
+  useGetSupportRequestsQuery,
+  useGiveSupportReplyMutation,
+} from "../../redux/apiSlices/aboutSlice";
 import { imageUrl } from "../../redux/api/baseApi";
 
 const { TextArea } = Input;
@@ -21,12 +24,21 @@ const SupportRequest = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [replyImage, setReplyImage] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("all");
   const [form] = Form.useForm();
 
-  const { data: getSupportRequests, isLoading } = useGetSupportRequestsQuery({
+  const {
+    data: getSupportRequests,
+    isLoading,
+    refetch,
+  } = useGetSupportRequestsQuery({
     page: 1,
     limit: 10,
+    status: statusFilter !== "all" ? statusFilter : "",
   });
+
+  const [giveSupportReply, { isLoading: isReplying }] =
+    useGiveSupportReplyMutation();
 
   if (isLoading) {
     return (
@@ -38,18 +50,35 @@ const SupportRequest = () => {
 
   const data = getSupportRequests?.data?.data || [];
 
-  const handleReply = (values) => {
-    console.log(
-      "Reply to request:",
-      selectedRequest,
-      "Response:",
-      values,
-      "Image:",
-      replyImage
-    );
-    form.resetFields();
-    setReplyImage(null);
-    setIsModalOpen(false);
+  const handleReply = async (values) => {
+    try {
+      // Create FormData
+      const formData = new FormData();
+      formData.append("supportId", selectedRequest._id);
+      formData.append("message", values.reply);
+
+      // Add image if exists
+      if (replyImage && replyImage.file) {
+        formData.append("image", replyImage.file);
+      }
+
+      // Send the reply
+      const response = await giveSupportReply(formData).unwrap();
+
+      if (response.success) {
+        message.success("Reply sent successfully");
+      } else {
+        message.error(response.message || "Failed to send reply");
+      }
+
+      // Reset form and close modal
+      form.resetFields();
+      setReplyImage(null);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error sending reply:", error);
+      message.error(error.data?.message || "Failed to send reply");
+    }
   };
 
   const showRequestDetails = (record) => {
@@ -69,16 +98,25 @@ const SupportRequest = () => {
       title: "User Name",
       dataIndex: ["for", "fullName"],
       key: "userName",
+      render: (_, record) => {
+        return record?.for?.fullName || "N/A";
+      },
     },
     {
       title: "Email",
       dataIndex: ["for", "email"],
       key: "email",
+      render: (_, record) => {
+        return record?.for?.email || "N/A";
+      },
     },
     {
       title: "Problem Category",
       dataIndex: "category",
       key: "category",
+      render: (category) => {
+        return category || "N/A";
+      },
     },
     {
       title: "Status",
@@ -87,10 +125,10 @@ const SupportRequest = () => {
       render: (status) => {
         let className = "";
         switch (status) {
-          case "Pending":
-            className = "bg-[#63666A] text-white";
+          case "PENDING":
+            className = "bg-[#fff1a0] text-black";
             break;
-          case "Solved":
+          case "SOLVED":
             className = "bg-[#E7FFE7] text-[#00B907]";
             break;
           default:
@@ -122,7 +160,12 @@ const SupportRequest = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold">Support Request</h2>
         <Select
-          defaultValue="Pending"
+          value={statusFilter}
+          onChange={(value) => {
+            setStatusFilter(value);
+            // Force refetch when filter changes
+            refetch();
+          }}
           className="w-32"
           options={[
             { value: "all", label: "All" },
@@ -289,6 +332,7 @@ const SupportRequest = () => {
                   type="primary"
                   htmlType="submit"
                   className="bg-[#63666A] hover:bg-[#63666A]/90"
+                  loading={isReplying}
                 >
                   Send Reply
                 </Button>

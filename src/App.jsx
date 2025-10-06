@@ -1,12 +1,13 @@
 import React from "react";
 import router from "./routes";
 import { RouterProvider } from "react-router-dom";
+import { App as AntdApp } from "antd";
 
 function App() {
   return (
-    <React.Fragment>
+    <AntdApp>
       <RouterProvider router={router} />
-    </React.Fragment>
+    </AntdApp>
   );
 }
 export default App;

@@ -86,3 +86,73 @@
 .ant-switch-checked {
   background-color: #4a4f61 !important;
 }
+
+/* for Google Translate   */
+
+/* Hide the Google Translate banner */
+
+.antialiased {
+  position: inherit !important;
+}
+
+/* Hide the Google Translate toolbar but keep functionality */
+.goog-te-gadget {
+  display: none !important;
+}
+
+/* Hide the Google Translate banner */
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+/* Remove pop-up preview */
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+/* Hide the floating dropdown */
+.goog-te-menu-frame {
+  display: none !important;
+}
+
+/* Hide Google Translate Top Bar */
+.skiptranslate {
+  display: none !important;
+}
+
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf.VIpgJd-ZVi9od-aZ2wEe-wOHMyf-ti6hGc {
+  display: none !important;
+}
+
+.VIpgJd-ZVi9od-aZ2wEe {
+  display: none !important;
+}
+
+/* Ensure Google Translate doesn't interfere with layout */
+body {
+  top: 0 !important;
+}
+
+/* Fix for Google Translate affecting body positioning */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+/* Hide the Google Translate combo box but keep it functional */
+.goog-te-combo {
+  display: none !important;
+}
+
+/* Hide all Google Translate UI elements */
+#google_translate_element {
+  display: none !important;
+}
+
+/* Prevent Google Translate from affecting page layout */
+body.translated-ltr {
+  top: 0 !important;
+}
+
+body.translated-rtl {
+  top: 0 !important;
+}

@@ -23,6 +23,7 @@ const Home = () => {
 
   const generalState = dashboardOverview?.data || [];
   const yearlyRevenueData = generalState?.yearlyRevenueData || [];
+  const userJoined = generalState?.userJoined || [];
 
   return (
     <div>
@@ -32,7 +33,7 @@ const Home = () => {
       </div>
       <div className="flex items-center justify-center gap-3 mt-3">
         <div className="w-[50%]">
-          <TotalUserChart />
+          <TotalUserChart userJoined={userJoined} />
         </div>
         <div className="w-[50%]">
           <UserEngagement />

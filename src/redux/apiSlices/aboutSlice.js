@@ -17,15 +17,28 @@ const aboutUsSlice = api.injectEndpoints({
       },
     }),
     getSupportRequests: builder.query({
-      query: ({ page, limit }) => {
+      query: ({ page, limit, status }) => {
         return {
-          url: `/admin/support?page=${page}&limit=${limit}`,
+          url: `/admin/support?page=${page}&limit=${limit}&status=${status}`,
           method: "GET",
+        };
+      },
+    }),
+
+    giveSupportReply: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/admin/support`,
+          method: "POST",
+          body: data,
         };
       },
     }),
   }),
 });
 
-export const { useUpdateAboutUsMutation, useGetSupportRequestsQuery } =
-  aboutUsSlice;
+export const {
+  useUpdateAboutUsMutation,
+  useGetSupportRequestsQuery,
+  useGiveSupportReplyMutation,
+} = aboutUsSlice;

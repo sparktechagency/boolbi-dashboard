@@ -106,7 +106,7 @@ const userSlice = api.injectEndpoints({
       query: (id) => {
         return {
           method: "DELETE",
-          url: `/admin/make?adminId=${id}`,
+          url: `/admin/make?adminID=${id}`,
         };
       },
       invalidatesTags: ["AdminData"],
