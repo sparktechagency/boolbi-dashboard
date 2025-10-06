@@ -38,9 +38,9 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("boolbieToken");
     localStorage.removeItem("refreshToken");
-    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("boolbieToken");
     sessionStorage.removeItem("refreshToken");
     Cookies.remove("refreshToken");
     navigate("/auth/login");
