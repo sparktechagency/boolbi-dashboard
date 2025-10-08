@@ -24,15 +24,15 @@ import Language from "../Pages/Dashboard/Language";
 import Category from "../Pages/Dashboard/Category";
 import SubCategory from "../Pages/Dashboard/SubCategory";
 import SupportRequest from "../Pages/Dashboard/SupportRequest";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    // element: <ProtectedRoute><Main /></ProtectedRoute> ,
     element: (
-      // <PrivateRoute>
-      <Main />
-      // </PrivateRoute>
+      <PrivateRoute>
+        <Main />
+      </PrivateRoute>
     ),
     children: [
       {

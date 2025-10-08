@@ -16,30 +16,25 @@ const Header = () => {
   const [notificationCount, setNotificationCount] = useState(0);
   const [socket, setSocket] = useState(null);
 
-  // Initialize socket connection
   useEffect(() => {
-    // Connect to the socket server
     const newSocket = io("http://10.10.7.28:3000");
     setSocket(newSocket);
 
-    // Clean up socket connection on component unmount
     return () => {
       newSocket.disconnect();
     };
   }, []);
 
-  // Listen for new notifications
   useEffect(() => {
     if (socket) {
       socket.on("new_notification", (data) => {
         console.log("New notification received:", data);
-        // Only increment count if notification is unread
+
         if (data && !data.isRead) {
-          setNotificationCount(prev => prev + 1);
+          setNotificationCount((prev) => prev + 1);
         }
       });
 
-      // Error handling
       socket.on("connect_error", (error) => {
         console.error("Socket connection error:", error);
       });
@@ -53,10 +48,11 @@ const Header = () => {
     };
   }, [socket]);
 
-  // Set initial notification count from API - only count unread notifications
   useEffect(() => {
     if (notification?.data?.data) {
-      const unreadCount = notification.data.data.filter(item => !item.isRead).length;
+      const unreadCount = notification.data.data.filter(
+        (item) => !item.isRead
+      ).length;
       setNotificationCount(unreadCount);
     }
   }, [notification]);
