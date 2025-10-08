@@ -1,5 +1,6 @@
-import { FaUsers } from "react-icons/fa6";
-import salongoLogo from "../../../assets/salon-go-logo.png";
+import { FaMoneyBillTrendUp, FaUsers } from "react-icons/fa6";
+import { MdOutlinePostAdd } from "react-icons/md";
+import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
 
 const GeneralStateSection = ({ generalState }) => {
   const state = generalState;
@@ -19,7 +20,7 @@ const GeneralStateSection = ({ generalState }) => {
       </div>
       <div className="bg-white rounded-2xl py-0 px-6 flex items-center justify-start gap-4">
         <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center">
-          <FaUsers color="#210630" size={24} />
+          <FaMoneyBillTrendUp color="#210630" size={24} />
         </div>
         <div className="flex flex-col items-start">
           <h2 className="text-center text-2xl text-base">New Revenue</h2>
@@ -30,7 +31,7 @@ const GeneralStateSection = ({ generalState }) => {
       </div>
       <div className="bg-white rounded-2xl py-0 px-6 flex items-center justify-start gap-4">
         <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center">
-          <FaUsers color="#210630" size={24} />
+          <VscGitPullRequestGoToChanges color="#210630" size={24} />
         </div>
         <div className="flex flex-col items-start">
           <h2 className="text-center text-2xl text-base">total job request</h2>
@@ -41,7 +42,7 @@ const GeneralStateSection = ({ generalState }) => {
       </div>
       <div className="bg-white rounded-2xl py-0 px-6 flex items-center justify-start gap-4">
         <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center">
-          <FaUsers color="#210630" size={24} />
+          <MdOutlinePostAdd color="#210630" size={24} />
         </div>
         <div className="flex flex-col items-start">
           <h2 className="text-center text-2xl text-base">total job post</h2>

@@ -14,7 +14,7 @@ const Main = () => {
       {/* sidebar and content container */}
       <div className="grid grid-cols-12 gap-3 h-[calc(100vh-124px)]">
         {/* side bar */}
-        <div className="col-span-2 bg-white rounded-xl p-3 overflow-y-auto">
+        <div className="col-span-2 rounded-xl px-3">
           <Sidebar />
         </div>
 

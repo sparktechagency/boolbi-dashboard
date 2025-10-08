@@ -3,10 +3,10 @@ import { api } from "../api/baseApi";
 const dashboardSlice = api.injectEndpoints({
   endpoints: (builder) => ({
     dashboardOverview: builder.query({
-      query: () => {
+      query: ({ userJoinedYear, revenueYear }) => {
         return {
           method: "GET",
-          url: "/admin",
+          url: `admin?userJoinedYear=${userJoinedYear}&revenueYear=${revenueYear}`,
         };
       },
     }),

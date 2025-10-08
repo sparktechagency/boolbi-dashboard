@@ -1,16 +1,67 @@
-import React from "react";
-
-import { Link } from "react-router-dom";
-import { FaRegBell } from "react-icons/fa6";
-import { Badge } from "antd";
-import logo from "../../assets/randomProfile2.jpg";
+import logo from "../../assets/logo.png";
 import { useFetchAdminProfileQuery } from "../../redux/apiSlices/authSlice";
 import { imageUrl } from "../../redux/api/baseApi";
+import { Link } from "react-router-dom";
+import { Badge } from "antd";
+import { FaRegBell } from "react-icons/fa6";
+import { useNotificationQuery } from "../../redux/apiSlices/notificationSlice";
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
 const Header = () => {
-  const { data: userData, isLoading } = useFetchAdminProfileQuery();
+  const { data: userData, isLoading: isLoadingUser } =
+    useFetchAdminProfileQuery();
+  const { data: notification, isLoading: isLoadingNotification } =
+    useNotificationQuery();
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [socket, setSocket] = useState(null);
 
-  if (isLoading) {
+  // Initialize socket connection
+  useEffect(() => {
+    // Connect to the socket server
+    const newSocket = io("http://10.10.7.28:3000");
+    setSocket(newSocket);
+
+    // Clean up socket connection on component unmount
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  // Listen for new notifications
+  useEffect(() => {
+    if (socket) {
+      socket.on("new_notification", (data) => {
+        console.log("New notification received:", data);
+        // Only increment count if notification is unread
+        if (data && !data.isRead) {
+          setNotificationCount(prev => prev + 1);
+        }
+      });
+
+      // Error handling
+      socket.on("connect_error", (error) => {
+        console.error("Socket connection error:", error);
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off("new_notification");
+        socket.off("connect_error");
+      }
+    };
+  }, [socket]);
+
+  // Set initial notification count from API - only count unread notifications
+  useEffect(() => {
+    if (notification?.data?.data) {
+      const unreadCount = notification.data.data.filter(item => !item.isRead).length;
+      setNotificationCount(unreadCount);
+    }
+  }, [notification]);
+
+  if (isLoadingUser || isLoadingNotification) {
     return (
       <div className="flex justify-center items-center my-20 text-lg text-secondary">
         Loading...
@@ -18,36 +69,37 @@ const Header = () => {
     );
   }
   const adminData = userData?.data;
+
   // console.log(adminData);
 
   return (
-    <div className="flex items-center gap-5 justify-end">
-      {/* <Link to="/notification" className="h-fit mt-[10px]">
-        <Badge count={5}>
-          <FaRegBell color="#4E4E4E" size={24} />
-        </Badge>
-      </Link> */}
+    <div className="flex items-center justify-between w-full">
+      <div className="ml-28">
+        <img src={logo} alt="logo" className="w-20 h-20" />
+      </div>
 
-      <div className="flex gap-2 items-center justify-center border-4 p-1 rounded-full">
-        <img
-          style={{
-            clipPath: "circle()",
-            width: 45,
-            height: 45,
-          }}
-          src={
-            adminData?.profileImage
-              ? adminData?.profileImage?.startsWith("http")
-                ? adminData?.profileImage
-                : `${imageUrl}${adminData?.profileImage}`
-              : logo
-          }
-          alt="person-male--v2"
-          className="clip"
-        />
-        <div className="flex pr-2 flex-col">
-          <p className="text-xl">{adminData?.fullName || "SUPER ADMIN"}</p>
-          <p className="text-sm text-gray-500">{userData?.data?.role}</p>
+      <div className="flex items-center gap-5">
+        <Link to="/notification" className="mt-2 rounded-lg p-2">
+          <Badge count={notificationCount}>
+            <FaRegBell color="#4E4E4E" size={24} />
+          </Badge>
+        </Link>
+        <div className="flex gap-2 items-center justify-center">
+          <img
+            src={
+              adminData?.profileImage
+                ? adminData?.profileImage?.startsWith("http")
+                  ? adminData?.profileImage
+                  : `${imageUrl}${adminData?.profileImage}`
+                : logo
+            }
+            alt="person-male--v2"
+            className="w-12 h-12 rounded-lg"
+          />
+          <div className="flex pr-2 flex-col">
+            <p className="text-xl">{adminData?.fullName || "SUPER ADMIN"}</p>
+            <p className="text-sm text-gray-500">{userData?.data?.role}</p>
+          </div>
         </div>
       </div>
     </div>

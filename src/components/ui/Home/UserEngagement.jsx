@@ -29,28 +29,12 @@ const UserEngagement = () => {
     );
   }
 
-  // Dummy data for User Engagement
-  const dummyChartData = [
-    { month: "January", orderCount: 120, userCount: 200 },
-    { month: "February", orderCount: 150, userCount: 220 },
-    { month: "March", orderCount: 180, userCount: 250 },
-    { month: "April", orderCount: 200, userCount: 300 },
-    { month: "May", orderCount: 230, userCount: 320 },
-    { month: "June", orderCount: 190, userCount: 280 },
-    { month: "July", orderCount: 250, userCount: 340 },
-    { month: "August", orderCount: 270, userCount: 360 },
-    { month: "September", orderCount: 210, userCount: 310 },
-    { month: "October", orderCount: 300, userCount: 400 },
-    { month: "November", orderCount: 260, userCount: 350 },
-    { month: "December", orderCount: 310, userCount: 420 },
-  ];
-
   const chartData = engagementData?.data || [];
 
   return (
-    <div className="bg-white p-5 w-[100%] h-[410px] rounded-2xl border">
+    <div className="bg-white p-5 w-[100%] h-[450px] rounded-2xl border">
       <div className="flex justify-between items-center mb-5">
-        <h2 className="font-bold">User Engagement</h2>
+        <h2 className="mb-5 mt-4 text-2xl font-semibold">User Engagement</h2>
         <div className="relative">
           <select
             value={selectedYear}
@@ -72,7 +56,7 @@ const UserEngagement = () => {
           </select>
         </div>
       </div>
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height={350}>
         <LineChart
           data={chartData}
           margin={{

@@ -9,28 +9,46 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { name: "Jan", uv: 4000 },
-  { name: "Feb", uv: 3000 },
-  { name: "Mar", uv: 2000 },
-  { name: "Apr", uv: 2780 },
-  { name: "May", uv: 1890 },
-  { name: "Jun", uv: 2390 },
-  { name: "Jul", uv: 3490 },
-  { name: "Aug", uv: 2490 },
-  { name: "Sep", uv: 1490 },
-  { name: "Oct", uv: 4490 },
-  { name: "Nov", uv: 3490 },
-  { name: "Dec", uv: 1490 },
-];
+const TotalRevenue = ({
+  yearlyRevenueData,
+  years,
+  selectedYear,
+  setSelectedYear,
+}) => {
+  const handleYearChange = (e) => {
+    const newYear = e.target.value;
+    setSelectedYear(newYear);
+  };
 
-const TotalRevenue = ({ yearlyRevenueData }) => {
   return (
     <div
       style={{ width: "100%", height: 410 }}
       className="px-5 py-3 mt-3 bg-white rounded-2xl"
     >
-      <h4 className="mb-5 mt-4 text-xl font-semibold">total revenue</h4>
+      <div className="flex justify-between items-center">
+        <h4 className="mb-5 mt-4 text-2xl font-semibold">Total Revenue</h4>
+        <div className="relative">
+          <select
+            value={selectedYear}
+            onChange={handleYearChange}
+            className="border rounded-md px-3 py-2 w-32 cursor-pointer"
+            style={{
+              maxHeight: "150px",
+              overflowY: "scroll",
+            }}
+          >
+            <option value="">Select Year</option>
+            {years
+              ?.slice()
+              ?.reverse()
+              ?.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+          </select>
+        </div>
+      </div>
 
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart
