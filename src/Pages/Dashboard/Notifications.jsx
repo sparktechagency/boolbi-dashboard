@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { ConfigProvider, Pagination, message } from "antd";
-import Title from "../../components/common/Title";
+import { useState, useEffect } from "react";
+import { ConfigProvider, Pagination, Spin, message } from "antd";
+
 import {
   useNotificationQuery,
   useReadNotificationsMutation,
 } from "../../redux/apiSlices/notificationSlice";
-import rentMeLogo from "../../assets/navLogo.png";
 import { format } from "date-fns";
 
 const Notifications = () => {
@@ -13,12 +12,18 @@ const Notifications = () => {
   const [pageSize, setPageSize] = useState(5);
 
   const { data: notifications, isLoading, refetch } = useNotificationQuery();
+
+  // Refetch notifications when the component mounts
+  useEffect(() => {
+    refetch();
+    console.log("Refetching notifications on page load");
+  }, [refetch]);
   const [readNotifications] = useReadNotificationsMutation();
 
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <img src={rentMeLogo} alt="" className="w-32 animate-pulse" />
+        <Spin />
       </div>
     );
   }
