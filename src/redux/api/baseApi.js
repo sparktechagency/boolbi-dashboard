@@ -84,6 +84,7 @@ export const api = createApi({
     "providers",
     "Category",
     "admins",
+    "Support",
   ],
   endpoints: () => ({}),
 });
