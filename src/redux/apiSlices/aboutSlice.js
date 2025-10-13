@@ -23,6 +23,7 @@ const aboutUsSlice = api.injectEndpoints({
           method: "GET",
         };
       },
+      providesTags: ["Support"],
     }),
 
     giveSupportReply: builder.mutation({
@@ -33,6 +34,7 @@ const aboutUsSlice = api.injectEndpoints({
           body: data,
         };
       },
+      invalidatesTags: ["Support"],
     }),
   }),
 });
