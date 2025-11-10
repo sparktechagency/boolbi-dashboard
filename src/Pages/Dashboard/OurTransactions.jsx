@@ -8,6 +8,7 @@ import {
   Button,
   Form,
   message,
+  Select,
 } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { usePaymentHistoryQuery } from "../../redux/apiSlices/dashboardSlice";
@@ -22,6 +23,8 @@ const OurTransactions = () => {
   const [tempCommission, setTempCommission] = useState(commission);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL");
 
   const {
     data: paymentHistory,
@@ -45,11 +48,38 @@ const OurTransactions = () => {
   const totalRecords = paymentHistory?.data?.total || 0;
   const adminCommission = getAdminCommission?.data || 0;
 
+  // Local filtering for search and status (applies to current page data)
+  const normalized = (val) => String(val || "").toLowerCase();
+  const filteredData = tableData.filter((item) => {
+    const term = normalized(searchTerm);
+    const matchesSearch = !term
+      ? true
+      : [item?.jobName, item?.customerName, item?._id]
+          .map(normalized)
+          .some((field) => field.includes(term));
+    const status = normalized(item?.paymentStatus);
+    const matchesStatus =
+      statusFilter === "ALL" ? true : status === normalized(statusFilter);
+    return matchesSearch && matchesStatus;
+  });
+
   // Handle pagination change
   const handleTableChange = (pagination) => {
     setCurrentPage(pagination.current);
     setPageSize(pagination.pageSize);
   };
+
+  // Reset pagination when filters change
+  // so users see results from the first page
+  // (client-side filtering on the current page results)
+  // If backend supports server-side filtering later, this can be removed.
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // useEffect is not strictly necessary for a simple reset; inline here:
+  if (currentPage !== 1 && (searchTerm || statusFilter !== "ALL")) {
+    // lightweight guard to avoid infinite re-render loops
+    setCurrentPage(1);
+  }
 
   const columns = [
     {
@@ -177,11 +207,24 @@ const OurTransactions = () => {
         </div>
       </div>
 
-      <div className="flex justify-end items-center mb-6">
+      <div className="flex justify-end items-center mb-6 gap-3">
         <Input
           prefix={<SearchOutlined className="text-gray-400" />}
-          placeholder="Search..."
+          placeholder="Search by job, customer, or ID"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          allowClear
           className="max-w-xs rounded-lg"
+        />
+        <Select
+          value={statusFilter}
+          onChange={setStatusFilter}
+          className="w-40"
+          options={[
+            { label: "All Status", value: "ALL" },
+            { label: "Pending", value: "PENDING" },
+            { label: "Success", value: "SUCCESS" },
+          ]}
         />
       </div>
       <Modal
@@ -218,13 +261,16 @@ const OurTransactions = () => {
 
       <Table
         columns={columns}
-        dataSource={tableData}
+        dataSource={filteredData}
         loading={isLoading}
         rowKey="_id"
         pagination={{
           current: currentPage,
           pageSize: pageSize,
-          total: totalRecords,
+          total:
+            searchTerm || statusFilter !== "ALL"
+              ? filteredData.length
+              : totalRecords,
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} of ${total} items`,
           pageSizeOptions: ["10", "20", "50", "100"],

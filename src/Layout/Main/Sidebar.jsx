@@ -57,7 +57,11 @@ const Sidebar = () => {
       icon: <FaMoneyBillTransfer size={24} />,
       label: <Link to="/payment-history">Payment History</Link>,
     },
-
+    {
+      key: "/jobs-list",
+      icon: <FaClipboardList size={24} />,
+      label: <Link to="/jobs-list">Jobs List</Link>,
+    },
     {
       key: "/category",
       icon: <ChartBarStacked size={18} />,

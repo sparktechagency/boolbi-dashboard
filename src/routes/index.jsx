@@ -26,6 +26,7 @@ import SubCategory from "../Pages/Dashboard/SubCategory";
 import SupportRequest from "../Pages/Dashboard/SupportRequest";
 import PrivateRoute from "./PrivateRoute";
 import VerificationRequests from "../Pages/Dashboard/VerificationRequests";
+import JobList from "../Pages/Dashboard/JobList";
 
 const router = createBrowserRouter([
   {
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
       {
         path: "/job-category",
         element: <JobCategory />,
+      },
+      {
+        path: "/jobs-list",
+        element: <JobList />,
       },
       {
         path: "/verification-request",

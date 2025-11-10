@@ -87,6 +87,7 @@ export const api = createApi({
     "admins",
     "Support",
     "verificationRequests",
+    "JobPost",
   ],
   endpoints: () => ({}),
 });

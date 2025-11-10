@@ -86,6 +86,17 @@ const categorySlice = api.injectEndpoints({
       },
       invalidatesTags: ["SubCategory"],
     }),
+
+    // job post
+    getAllJobPosts: builder.query({
+      query: () => {
+        return {
+          method: "GET",
+          url: "/user/post/all",
+        };
+      },
+      providesTags: ["JobPost"],
+    }),
   }),
 });
 
@@ -99,4 +110,7 @@ export const {
   useAddSubCategoryMutation,
   useDeleteSubCategoryMutation,
   useUpdateSubCategoryMutation,
+
+  // job post
+  useGetAllJobPostsQuery,
 } = categorySlice;
