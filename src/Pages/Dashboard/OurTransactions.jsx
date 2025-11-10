@@ -1,11 +1,25 @@
-import React, { useState } from "react";
-import { Table, Switch, Input, Space, Spin, Tooltip } from "antd";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
-import { FaEye } from "react-icons/fa6";
+import { useState } from "react";
+import {
+  Table,
+  Input,
+  Tooltip,
+  Modal,
+  InputNumber,
+  Button,
+  Form,
+  message,
+} from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { usePaymentHistoryQuery } from "../../redux/apiSlices/dashboardSlice";
+import {
+  useGetAdminCommissionQuery,
+  useUpdateAdminCommissionMutation,
+} from "../../redux/apiSlices/orderSlice";
 
 const OurTransactions = () => {
   const [commission, setCommission] = useState(5);
+  const [isCommissionModalOpen, setCommissionModalOpen] = useState(false);
+  const [tempCommission, setTempCommission] = useState(commission);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
@@ -17,10 +31,19 @@ const OurTransactions = () => {
     page: currentPage,
     limit: pageSize,
   });
+  const {
+    data: getAdminCommission,
+    isLoading: isLoadingAdminCommission,
+    refetch: refetchAdminCommission,
+  } = useGetAdminCommissionQuery();
+
+  const [updateAdminCommission, { isLoading: isUpdatingAdminCommission }] =
+    useUpdateAdminCommissionMutation();
 
   // Extract data from API response
   const tableData = paymentHistory?.data?.data || [];
   const totalRecords = paymentHistory?.data?.total || 0;
+  const adminCommission = getAdminCommission?.data || 0;
 
   // Handle pagination change
   const handleTableChange = (pagination) => {
@@ -72,7 +95,7 @@ const OurTransactions = () => {
       dataIndex: "profit",
       key: "profit",
       render: (profit) => {
-        return <p>${profit || 0}</p>;
+        return <p>${Number(profit || 0).toFixed(2)}</p>;
       },
     },
     {
@@ -113,16 +136,44 @@ const OurTransactions = () => {
     // },
   ];
 
+  const handleSaveCommission = async () => {
+    try {
+      const payload = {
+        adminCommissionPercentage: Number(tempCommission) || 0,
+      };
+      const res = await updateAdminCommission(payload).unwrap();
+      message.success(
+        res?.message || "Default commission updated successfully"
+      );
+      setCommissionModalOpen(false);
+      refetchAdminCommission();
+    } catch (err) {
+      message.error(
+        err?.data?.message || "Failed to update default commission percentage"
+      );
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl p-6">
       <div className="mb-8">
         <h2 className="text-lg font-medium mb-4">Allow Custom Commission</h2>
-        <div className="flex items-center gap-4">
-          <span className="text-gray-500">Default Commission</span>
-          <div className="flex items-center gap-2">
-            <Switch defaultChecked size="small" />
-            <span>{commission}%</span>
+        <div className="flex items-center justify-between p-4 border rounded-lg bg-gray-50">
+          <div className="flex items-center gap-4">
+            <span className="text-gray-500">Default Commission</span>
+            <span className="text-gray-700 text-2xl font-bold">
+              {adminCommission}%
+            </span>
           </div>
+          <Button
+            type="primary"
+            onClick={() => {
+              setTempCommission(Number(adminCommission) || 0);
+              setCommissionModalOpen(true);
+            }}
+          >
+            Edit
+          </Button>
         </div>
       </div>
 
@@ -133,6 +184,37 @@ const OurTransactions = () => {
           className="max-w-xs rounded-lg"
         />
       </div>
+      <Modal
+        title="Edit Default Commission"
+        open={isCommissionModalOpen}
+        onCancel={() => setCommissionModalOpen(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setCommissionModalOpen(false)}>
+            Cancel
+          </Button>,
+          <Button
+            key="save"
+            type="primary"
+            loading={isUpdatingAdminCommission}
+            onClick={handleSaveCommission}
+          >
+            Save
+          </Button>,
+        ]}
+      >
+        <Form layout="vertical">
+          <Form.Item label="Commission Percentage" required>
+            <InputNumber
+              min={0}
+              max={100}
+              value={tempCommission}
+              onChange={(val) => setTempCommission(val ?? 0)}
+              addonAfter="%"
+              className="w-full"
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
 
       <Table
         columns={columns}

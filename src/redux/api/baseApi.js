@@ -5,7 +5,8 @@ import Cookies from "js-cookie";
 // Enhanced base query to handle token refresh
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   const baseQuery = fetchBaseQuery({
-    baseUrl: "http://10.10.7.28:3000/api/v1",
+    // baseUrl: "http://10.10.7.77:7003/api/v1",
+    baseUrl: "http://217.154.77.17:3000/api/v1",
     prepareHeaders: (headers) => {
       const token =
         localStorage.getItem("boolbieToken") ||
@@ -85,9 +86,11 @@ export const api = createApi({
     "Category",
     "admins",
     "Support",
+    "verificationRequests",
   ],
   endpoints: () => ({}),
 });
 
 // Export the image URL as a constant
-export const imageUrl = "http://10.10.7.28:3000";
+// export const imageUrl = "http://10.10.7.77:7003";
+export const imageUrl = "http://217.154.77.17:3000";

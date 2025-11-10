@@ -10,6 +10,7 @@ import { TbExchange, TbUserScreen, TbWorld } from "react-icons/tb";
 import { IoIosLogOut } from "react-icons/io";
 import { PiUserPlus } from "react-icons/pi";
 import { LuLayoutDashboard } from "react-icons/lu";
+import { IoShieldCheckmark } from "react-icons/io5";
 import Cookies from "js-cookie";
 import { ImPacman } from "react-icons/im";
 import { FaClipboardList, FaMoneyBillTransfer, FaUser } from "react-icons/fa6";
@@ -76,11 +77,11 @@ const Sidebar = () => {
       ),
     },
 
-    // {
-    //   key: "/job-category",
-    //   icon: <FaShoppingBag size={24} />,
-    //   label: <Link to="/job-category">Job Category</Link>,
-    // },
+    {
+      key: "/verification-request",
+      icon: <IoShieldCheckmark size={24} />,
+      label: <Link to="/verification-request">Verification Request</Link>,
+    },
 
     {
       key: "/personal-information",

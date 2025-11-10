@@ -50,6 +50,27 @@ const userSlice = api.injectEndpoints({
       providesTags: ["providers"],
     }),
 
+    getAllVerificationRequests: builder.query({
+      query: () => {
+        return {
+          method: "GET",
+          url: `/admin/verification-requests`,
+        };
+      },
+      providesTags: ["verificationRequests"],
+    }),
+
+    updateVerificationStatus: builder.mutation({
+      query: (data) => {
+        return {
+          method: "PATCH",
+          url: `/admin/verification-requests`,
+          body: data,
+        };
+      },
+      invalidatesTags: ["verificationRequests"],
+    }),
+
     userById: builder.query({
       query: (id) => {
         return {
@@ -123,6 +144,8 @@ export const {
   useUserByIdQuery,
   useChangeUserStatusMutation,
   useChangeProviderStatusMutation,
+  useGetAllVerificationRequestsQuery,
+  useUpdateVerificationStatusMutation,
 
   useGetAllAdminsQuery,
   useAddNewAdminMutation,
