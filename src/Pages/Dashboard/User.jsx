@@ -4,12 +4,13 @@ import {
   useChangeUserStatusMutation,
   useGetCustomerByIdQuery,
 } from "../../redux/apiSlices/userSlice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { imageUrl } from "../../redux/api/baseApi";
 import toast from "react-hot-toast";
 
 const User = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -75,6 +76,33 @@ const User = () => {
     } catch (error) {
       toast.error(error?.message || "Failed to update user status");
     }
+  };
+
+  // Handle user deletion
+  const handleDeleteUser = async () => {
+    Modal.confirm({
+      title: "Are you sure you want to delete this account?",
+      content: "This action cannot be undone.",
+      okText: "Yes, Delete",
+      okType: "danger",
+      cancelText: "Cancel",
+      onOk: async () => {
+        try {
+          const res = await changeUserStatus({
+            id: currentUser._id,
+            action: "DELETE",
+          }).unwrap();
+          if (res?.success) {
+            toast.success(res?.message || "User deleted");
+            navigate("/customers");
+          } else {
+            toast.error(res?.message || "Failed to delete user");
+          }
+        } catch (error) {
+          toast.error(error?.message || "Failed to delete user");
+        }
+      },
+    });
   };
 
   return (
@@ -200,6 +228,15 @@ const User = () => {
               : currentUser.accountStatus === "ACTIVE"
               ? "Block User"
               : "Activate User"}
+          </button>
+          <button
+            onClick={() => handleDeleteUser(currentUser._id)}
+            disabled={changeLoading}
+            className={`px-6 py-2 rounded-md transition bg-red-600 text-white hover:bg-red-700 ${
+              changeLoading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            Delete User
           </button>
         </div>
       </div>

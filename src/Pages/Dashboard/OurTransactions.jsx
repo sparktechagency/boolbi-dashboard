@@ -9,6 +9,7 @@ import {
   Form,
   message,
   Select,
+  Space,
 } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { usePaymentHistoryQuery } from "../../redux/apiSlices/dashboardSlice";
@@ -16,6 +17,9 @@ import {
   useGetAdminCommissionQuery,
   useUpdateAdminCommissionMutation,
 } from "../../redux/apiSlices/orderSlice";
+import { FaEye, FaFilePdf } from "react-icons/fa6";
+import { imageUrl } from "../../redux/api/baseApi";
+import moment from "moment";
 
 const OurTransactions = () => {
   const [commission, setCommission] = useState(5);
@@ -155,15 +159,30 @@ const OurTransactions = () => {
         );
       },
     },
-    // {
-    //   title: "Action",
-    //   key: "action",
-    //   render: () => (
-    //     <Space size="middle">
-    //       <FaEye size={20} className="text-[#63666A] cursor-pointer" />
-    //     </Space>
-    //   ),
-    // },
+    {
+      title: "Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (date) => {
+        return date ? moment(date).format("YYYY-MM-DD, hh:mm A") : "N/A";
+      },
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            type="outline"
+            onClick={() => {
+              window.open(`${imageUrl}${record?.invoicePDF}` || "#", "_blank");
+            }}
+          >
+            <FaFilePdf size={20} className="text-[#63666A]" />
+          </Button>
+        </Space>
+      ),
+    },
   ];
 
   const handleSaveCommission = async () => {

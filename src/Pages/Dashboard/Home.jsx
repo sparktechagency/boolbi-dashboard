@@ -9,15 +9,20 @@ import TotalRevenue from "../../components/ui/Home/TotalRevenue";
 import TotalUserChart from "../../components/ui/Home/TotalUserChart";
 import { useDashboardOverviewQuery } from "../../redux/apiSlices/dashboardSlice";
 import { Spin } from "antd";
+import PlatformPerformance from "../../components/ui/Home/PlatformPerformance";
 
 const Home = () => {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 12 }, (_, i) => currentYear - 10 + i);
-  
+
   const [userJoinedYear, setUserJoinedYear] = useState(currentYear.toString());
   const [revenueYear, setRevenueYear] = useState(currentYear.toString());
 
-  const { data: dashboardOverview, isLoading, refetch } = useDashboardOverviewQuery({
+  const {
+    data: dashboardOverview,
+    isLoading,
+    refetch,
+  } = useDashboardOverviewQuery({
     userJoinedYear,
     revenueYear,
   });
@@ -42,13 +47,19 @@ const Home = () => {
   return (
     <div>
       <GeneralStateSection generalState={generalState} />
-      <div>
-        <TotalRevenue
-          yearlyRevenueData={yearlyRevenueData}
-          years={years}
-          selectedYear={revenueYear}
-          setSelectedYear={setRevenueYear}
-        />
+      <div className="flex items-center justify-center gap-3 mt-3">
+        <div className="w-full">
+          {" "}
+          <TotalRevenue
+            yearlyRevenueData={yearlyRevenueData}
+            years={years}
+            selectedYear={revenueYear}
+            setSelectedYear={setRevenueYear}
+          />
+        </div>
+        {/* <div className="w-[50%]">
+          <PlatformPerformance />
+        </div> */}
       </div>
       <div className="flex items-center justify-center gap-3 mt-3">
         <div className="w-[50%]">

@@ -19,11 +19,20 @@ const dashboardSlice = api.injectEndpoints({
       },
     }),
 
-    engagementData: builder.query({
-      query: ({ year }) => {
+    getPlatformPerformance: builder.query({
+      query: ({ range }) => {
         return {
           method: "GET",
-          url: `admin/engagement?year=${year}`,
+          url: `/admin/performance?timeRange=${range}`,
+        };
+      },
+    }),
+
+    engagementData: builder.query({
+      query: ({ range }) => {
+        return {
+          method: "GET",
+          url: `admin/engagement?timeRange=${range}`,
         };
       },
     }),
@@ -61,6 +70,7 @@ const dashboardSlice = api.injectEndpoints({
 export const {
   useDashboardOverviewQuery,
   useOverAllStateQuery,
+  useGetPlatformPerformanceQuery,
   useBestServicesQuery,
   useEngagementDataQuery,
   useVendorsConversionDataQuery,

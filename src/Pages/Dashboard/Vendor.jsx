@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Modal, Input, Spin, Alert } from "antd";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useChangeProviderStatusMutation,
   useGetProviderByIdQuery,
@@ -12,9 +12,10 @@ const Vendor = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [message, setMessage] = useState("");
   const { id } = useParams();
-
+  const navigate = useNavigate();
   const { data: providerData, isLoading, error } = useGetProviderByIdQuery(id);
-  const [changeProviderStatus, { isLoading: changeLoading }] = useChangeProviderStatusMutation();
+  const [changeProviderStatus, { isLoading: changeLoading }] =
+    useChangeProviderStatusMutation();
 
   const provider = providerData?.data;
 
@@ -70,6 +71,32 @@ const Vendor = () => {
     } catch (error) {
       toast.error(error?.message || "Failed to update provider status");
     }
+  };
+
+  const handleDeleteUser = async () => {
+    Modal.confirm({
+      title: "Are you sure you want to delete this account?",
+      content: "This action cannot be undone.",
+      okText: "Yes, Delete",
+      okType: "danger",
+      cancelText: "Cancel",
+      onOk: async () => {
+        try {
+          const res = await changeProviderStatus({
+            id: provider._id,
+            action: "DELETE",
+          }).unwrap();
+          if (res?.success) {
+            toast.success(res?.message || "Provider deleted");
+            navigate("/providers");
+          } else {
+            toast.error(res?.message || "Failed to delete provider");
+          }
+        } catch (error) {
+          toast.error(error?.message || "Failed to delete provider");
+        }
+      },
+    });
   };
 
   return (
@@ -176,9 +203,6 @@ const Vendor = () => {
         </p>
 
         <div className="flex gap-3 justify-end">
-          <button className="bg-gray-100 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-200 transition border border-gray-300">
-            Report
-          </button>
           <button
             onClick={() =>
               handleStatusChange(
@@ -190,15 +214,22 @@ const Vendor = () => {
               provider?.accountStatus === "ACTIVE"
                 ? "bg-red-600 text-white hover:bg-red-700"
                 : "bg-green-600 text-white hover:bg-green-700"
-            } ${
-              changeLoading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            } ${changeLoading ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             {changeLoading
               ? "Processing..."
               : provider?.accountStatus === "ACTIVE"
               ? "Block Provider"
               : "Activate Provider"}
+          </button>
+          <button
+            onClick={() => handleDeleteUser(provider._id)}
+            disabled={changeLoading}
+            className={`px-6 py-2 rounded-md transition bg-red-600 text-white hover:bg-red-700 ${
+              changeLoading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            Delete Provider
           </button>
         </div>
       </div>

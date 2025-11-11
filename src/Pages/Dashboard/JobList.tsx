@@ -1,9 +1,15 @@
-import { Spin, Table, Tag, Tooltip, Image } from "antd";
-import { useGetAllJobPostsQuery } from "../../redux/apiSlices/categorySlice";
+import { Spin, Table, Tag, Tooltip, Image, Space } from "antd";
+import {
+  useChangeJobStatusMutation,
+  useGetAllJobPostsQuery,
+} from "../../redux/apiSlices/categorySlice";
 import { imageUrl } from "../../redux/api/baseApi";
+import { FaEye } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 const JobList = () => {
   const { data: allJobPosts, isLoading } = useGetAllJobPostsQuery(undefined);
+  const [changeJobStatus] = useChangeJobStatusMutation();
 
   if (isLoading) {
     return (
@@ -20,7 +26,7 @@ const JobList = () => {
       title: "Serial No",
       key: "serial",
       render: (_: any, __: any, index: number) => index + 1,
-      width: 90,
+      width: 50,
     },
     {
       title: "Project Name",
@@ -47,31 +53,7 @@ const JobList = () => {
         </Tooltip>
       ),
     },
-    {
-      title: "Deadline",
-      dataIndex: "deadline",
-      key: "deadline",
-      render: (value: string) =>
-        value ? new Date(value).toLocaleString() : "-",
-      width: 200,
-    },
-    {
-      title: "Status",
-      key: "status",
-      render: (_: any, record: any) => (
-        <div className="flex gap-2 flex-wrap">
-          <Tag color={record?.isOfferApproved ? "green" : "default"}>
-            {record?.isOfferApproved ? "Offer Approved" : "Offer Pending"}
-          </Tag>
-          <Tag color={record?.isPaid ? "blue" : "default"}>
-            {record?.isPaid ? "Paid" : "Unpaid"}
-          </Tag>
-          <Tag color={record?.isOnProject ? "geekblue" : "default"}>
-            {record?.isOnProject ? "On Project" : "Not Started"}
-          </Tag>
-        </div>
-      ),
-    },
+
     {
       title: "Offers",
       dataIndex: "offers",
@@ -105,12 +87,37 @@ const JobList = () => {
       width: 130,
     },
     {
+      title: "Status",
+      dataIndex: "isBlocked",
+      key: "isBlocked",
+      render: (isBlocked: boolean) => (
+        <Tag color={isBlocked ? "red" : "green"}>
+          {isBlocked ? "Blocked" : "Active"}
+        </Tag>
+      ),
+      width: 100,
+    },
+    {
       title: "Created",
       dataIndex: "createdAt",
       key: "createdAt",
       render: (value: string) =>
         value ? new Date(value).toLocaleString() : "-",
       width: 200,
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_: any, record: any) => (
+        <Space size="middle">
+          <Link to={`/jobs-list/${record._id}`}>
+            <FaEye
+              size={20}
+              className="text-[#63666A] cursor-pointer hover:text-[#85acd3]"
+            />
+          </Link>
+        </Space>
+      ),
     },
   ];
 

@@ -27,6 +27,7 @@ import SupportRequest from "../Pages/Dashboard/SupportRequest";
 import PrivateRoute from "./PrivateRoute";
 import VerificationRequests from "../Pages/Dashboard/VerificationRequests";
 import JobList from "../Pages/Dashboard/JobList";
+import JobDetailsPage from "../Pages/Dashboard/JobDetailsPage";
 
 const router = createBrowserRouter([
   {
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
       {
         path: "/jobs-list",
         element: <JobList />,
+      },
+      {
+        path: "/jobs-list/:id",
+        element: <JobDetailsPage />,
       },
       {
         path: "/verification-request",

@@ -97,6 +97,38 @@ const categorySlice = api.injectEndpoints({
       },
       providesTags: ["JobPost"],
     }),
+
+    getSingleJobPost: builder.query({
+      query: (id) => {
+        return {
+          method: "GET",
+          url: `/user/post?id=${id}`,
+        };
+      },
+      providesTags: ["JobPost"],
+    }),
+
+    changeJobStatus: builder.mutation({
+      query: (data) => {
+        return {
+          method: "PATCH",
+          url: "/user/post/toggle-flagged-or-blocked",
+          body: data,
+        };
+      },
+      invalidatesTags: ["JobPost"],
+    }),
+
+    deleteJobPost: builder.mutation({
+      query: (data) => {
+        return {
+          method: "DELETE",
+          url: `/user/post`,
+          body: data,
+        };
+      },
+      invalidatesTags: ["JobPost"],
+    }),
   }),
 });
 
@@ -113,4 +145,7 @@ export const {
 
   // job post
   useGetAllJobPostsQuery,
+  useGetSingleJobPostQuery,
+  useChangeJobStatusMutation,
+  useDeleteJobPostMutation,
 } = categorySlice;
